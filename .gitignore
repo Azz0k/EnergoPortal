@@ -1,6 +1,8 @@
 # Logs
 logs
 *.log
+*.jpg
+*.png
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -67,10 +69,23 @@ typings/
 .nuxt
 
 # vuepress build output
-.vuepress/dist
+.vuepress/dist               
 
 # Serverless directories
 .serverless
 
 # FuseBox cache
 .fusebox/
+#DBRepository
+DBRepository/bin/**
+DBRepository/.vs/**
+DBRepository/obj/**
+Models/bin/**
+Models/.vs/**
+Models/obj/**
+EnergoPortal/bin/**
+EnergoPortal/obj/**
+EnergoPortal/node_modules/**
+EnergoPortal/.vs/**
+EnergoPortal/.idea/**
+
