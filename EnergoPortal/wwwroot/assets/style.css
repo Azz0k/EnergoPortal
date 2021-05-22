@@ -3,4 +3,35 @@
     margin-top: 0; 
 }
 
-/*# sourceMappingURL=style.css.map*/
+.floorImg{
+    height:800px;
+    width:1600px;
+
+}
+
+.FloorTabs{
+    margin-top:20px;
+
+}
+
+.imageContainer{
+    position:absolute;
+}
+
+.deviceRect {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    -webkit-transition-duration: 0.5s;
+    -moz-transition-duration: 0.5s;
+    -o-transition-duration: 0.5s;
+    transition-duration: 0.5s;
+    -webkit-transition-property: -webkit-transform;
+    -moz-transition-property: -moz-transform;
+    -o-transition-property: -o-transform;
+    transition-property: transform;
+}
+
+    .deviceRect:hover {
+        border-radius: 50%;
+    }

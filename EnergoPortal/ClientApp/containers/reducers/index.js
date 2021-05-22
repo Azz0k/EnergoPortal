@@ -1,8 +1,12 @@
+import horisontalMenu from "./menu.js";
+import FloorsImages from "./floors.js";
 const initialState = {
-    horizontalMenu: {
-        NavBar: {},
+    MainMenu: {
+        horisontalMenu,
         isLoaded: false,
     },
+    FloorsImages,
+    Devices:[],
 };
 const reducer = (state = initialState, action) => {
     switch (action.type) {

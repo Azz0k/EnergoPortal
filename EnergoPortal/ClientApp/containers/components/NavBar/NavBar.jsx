@@ -1,7 +1,49 @@
 ﻿import React from 'react';
-import './navbar.css';
+import { connect } from "react-redux";
 
-const NavBar = () => {
+const DropDownMenuItem = ({ menu }) => {
+    let result = menu.filter(el => (el.parentId == undefined));
+    console.log(result);
+    result = result.map(el => {
+        let temp = null;
+        if (el.subId.length > 0) {
+            const subMenuItems = menu.filter(e => el.subId.includes(e.id)).map(e => <SubMenuItem href={e.href} name={e.name} key={e.id} />);
+            temp = (<ul className="dropdown-menu" aria-labelledby="navbarDropdown" >
+                { subMenuItems}
+            </ul >);
+        }
+        return (<MenuItem href={el.href} key={el.id} name={el.name} sub={temp} />)
+    });
+
+    return (
+        <React.Fragment>
+            {result}
+        </React.Fragment>
+    );
+
+};
+
+const MenuItem = ({ href, name, sub }) => {
+    return (
+        <React.Fragment>
+            <li className="nav-item dropdown">
+                <a className="nav-link" href={href} >{name}</a>
+                {sub}
+            </li>
+        </React.Fragment>
+    );
+};
+
+const SubMenuItem = ({href, name}) => {
+    return(
+      <React.Fragment>
+          <li><a className="dropdown-item" href={href}>{name}</a></li>
+      </React.Fragment>
+    );
+};
+
+const NavBar = ({ MainMenu }) => {
+
     return (
         <React.Fragment>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -16,37 +58,19 @@ const NavBar = () => {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <a className="nav-link active" aria-current="page" href="#">Home</a>
-                            </li>
 
-                            <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown
-                                </a>
-                                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a className="dropdown-item" href="#">Action</a></li>
-                                    <li><a className="dropdown-item" href="#">Another action</a></li>
-                                    <li>
-                                        <hr className="dropdown-divider" />
-                                    </li>
-                                    <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link disabled" href="#" tabIndex="-1"
-                                    aria-disabled="true">Disabled</a>
-                            </li>
+                            <DropDownMenuItem menu = {MainMenu.horisontalMenu} />
+
                         </ul>
-                        <form className="d-flex">
-                            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button className="btn btn-outline-success" type="submit">Search</button>
-                        </form>
+
                     </div>
                 </div>
             </nav>
         </React.Fragment>
     );
 };
-export default NavBar;
+const mapStatetoPropsNavBar = ({ MainMenu }) => {
+    return { MainMenu };
+};
+
+export default connect(mapStatetoPropsNavBar)(NavBar);
