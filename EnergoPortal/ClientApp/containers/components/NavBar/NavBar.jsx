@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 
 const DropDownMenuItem = ({ menu }) => {
     let result = menu.filter(el => (el.parentId == undefined));
-    console.log(result);
     result = result.map(el => {
         let temp = null;
         if (el.subId.length > 0) {

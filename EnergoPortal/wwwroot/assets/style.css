@@ -13,6 +13,15 @@
     margin-top:20px;
 
 }
+.FloorTabItem{
+    cursor: pointer;
+}
+.unselectable {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 .imageContainer{
     position:absolute;
@@ -20,8 +29,8 @@
 
 .deviceRect {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
     -webkit-transition-duration: 0.5s;
     -moz-transition-duration: 0.5s;
     -o-transition-duration: 0.5s;

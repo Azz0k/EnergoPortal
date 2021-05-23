@@ -21,5 +21,5 @@ horisontalMenu.forEach(el => {
     };
 });
 
-console.log(horisontalMenu);
+
 export default horisontalMenu;

@@ -25,6 +25,9 @@
     "webpack-md5-hash": "0.0.6"
   },
   "dependencies": {
-    "react-router-dom": "^5.2.0"
+    "axios": "^0.21.1",
+    "core-js": "^3.12.1",
+    "react-router-dom": "^5.2.0",
+    "regenerator-runtime": "^0.13.7"
   }
 }
