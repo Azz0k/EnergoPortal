@@ -2329,7 +2329,6 @@ var Modal = function Modal(_ref) {
 
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     isOpen ? OpenModal() : CloseModal();
-    console.log(isOpen);
   });
   var style = {
     display: display
@@ -2338,7 +2337,7 @@ var Modal = function Modal(_ref) {
     className: 'modal fade ' + modalShow,
     tabIndex: "-1",
     role: "dialog",
-    ariaHidden: "true",
+    "aria-hidden": "true",
     style: style
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "modal-dialog",
@@ -2538,6 +2537,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _components_hoc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/hoc */ "./ClientApp/containers/components/hoc/index.js");
 /* harmony import */ var _components_Modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Modal */ "./ClientApp/containers/components/Modal/index.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -2554,20 +2559,75 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+var DeviceTextFieldsWithPlaceholders = {
+  "socketNumber": "Номер розетки",
+  "switchName": "Название свича",
+  "switchPort": "Номер порта на свиче",
+  "ipAddress": "IP адрес",
+  "macAddress": "МАС адрес",
+  "deviceName": "Название",
+  "phoneSocketNumber": "Номер розетки телефона",
+  "pbxPortNumber": "Порт АТС",
+  "phoneNumber": "Номер телефона",
+  "phoneId": "Инвентарный номер телефона",
+  "firstName": "Фамилия",
+  "lastName": "Имя",
+  "middleName": "Отчество",
+  "loginName": "Имя пользователя",
+  "mailAddress": "Адрес электронной почты",
+  "location": "Кабинет",
+  "memo": "Заметки"
+};
+var DeviceTextFields = Object.keys(DeviceTextFieldsWithPlaceholders);
 
-var DeviceWindow = function DeviceWindow(_ref) {
-  var modal = _ref.modal,
-      click = _ref.click;
+var InputField = function InputField(_ref) {
+  var value = _ref.value,
+      onchange = _ref.onchange,
+      name = _ref.name,
+      _ref$placeholder = _ref.placeholder,
+      placeholder = _ref$placeholder === void 0 ? "" : _ref$placeholder,
+      _ref$readonly = _ref.readonly,
+      readonly = _ref$readonly === void 0 ? false : _ref$readonly;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "input-group mb-3"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    type: "text",
+    className: "form-control",
+    placeholder: placeholder,
+    name: name,
+    value: value,
+    readOnly: readonly,
+    onChange: onchange
+  }));
+};
+
+var DeviceWindow = function DeviceWindow(_ref2) {
+  var device = _ref2.device,
+      isOpen = _ref2.isOpen,
+      click = _ref2.click,
+      change = _ref2.change;
+  var InputFields = Object.entries(device).filter(function (_ref3) {
+    var _ref4 = _slicedToArray(_ref3, 2),
+        key = _ref4[0],
+        value = _ref4[1];
+
+    DeviceTextFields.includes(key);
+  }).map(function (_ref5) {
+    var _ref6 = _slicedToArray(_ref5, 2),
+        key = _ref6[0],
+        value = _ref6[1];
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(InputField, {
+      onchange: change,
+      name: key,
+      value: value,
+      key: key,
+      placeholder: DeviceTextFieldsWithPlaceholders[key]
+    });
+  });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.default, {
-    isOpen: modal
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalHeader, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "This is modal header"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
-    type: "button",
-    className: "close",
-    "aria-label": "Close",
-    onClick: click
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
-    "aria-hidden": "true"
-  }, "\xD7"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalBody, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "This is modal body")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalFooter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+    isOpen: isOpen
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalHeader, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "This is modal header")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalBody, null, InputFields), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalFooter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     type: "button",
     className: "btn btn-secondary",
     onClick: click
@@ -2575,14 +2635,14 @@ var DeviceWindow = function DeviceWindow(_ref) {
     type: "button",
     className: "btn btn-primary",
     onClick: click
-  }, "Save changes")));
+  }, "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C")));
 };
 
-var DeviceIcon = function DeviceIcon(_ref2) {
-  var posX = _ref2.posX,
-      posY = _ref2.posY,
-      color = _ref2.color,
-      click = _ref2.click;
+var DeviceIcon = function DeviceIcon(_ref7) {
+  var posX = _ref7.posX,
+      posY = _ref7.posY,
+      color = _ref7.color,
+      click = _ref7.click;
   var style = {
     top: posY,
     left: posX
@@ -2603,9 +2663,9 @@ var DeviceIcon = function DeviceIcon(_ref2) {
   }));
 };
 
-var FloorsPlan = function FloorsPlan(_ref3) {
-  var SiteService = _ref3.SiteService,
-      FloorsImages = _ref3.FloorsImages;
+var FloorsPlan = function FloorsPlan(_ref8) {
+  var SiteService = _ref8.SiteService,
+      FloorsImages = _ref8.FloorsImages;
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
       _useState2 = _slicedToArray(_useState, 2),
@@ -2615,7 +2675,7 @@ var FloorsPlan = function FloorsPlan(_ref3) {
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
       isUpdated = _useState4[0],
-      setisUpdated = _useState4[1];
+      setIsUpdated = _useState4[1];
 
   var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
       _useState6 = _slicedToArray(_useState5, 2),
@@ -2624,17 +2684,30 @@ var FloorsPlan = function FloorsPlan(_ref3) {
 
   var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState8 = _slicedToArray(_useState7, 2),
-      modal = _useState8[0],
-      setModal = _useState8[1];
+      isOpenModal = _useState8[0],
+      setIsOpenModal = _useState8[1];
+
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}),
+      _useState10 = _slicedToArray(_useState9, 2),
+      currentDevice = _useState10[0],
+      setCurrentDevice = _useState10[1];
 
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if (!isUpdated) {
       SiteService.GetDevices().then(function (result) {
         setDevices(result);
-        setisUpdated(true);
+        setIsUpdated(true);
       });
     }
   });
+
+  var DeviceOnClick = function DeviceOnClick(id) {
+    setIsOpenModal(!isOpenModal);
+    SiteService.GetDevices(id).then(function (result) {
+      setCurrentDevice(result[0]);
+    });
+  };
+
   var floortab = FloorsImages.map(function (element, index) {
     var className = index === activeImage ? "FloorTabItem nav-link active" : "FloorTabItem nav-link";
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
@@ -2656,10 +2729,15 @@ var FloorsPlan = function FloorsPlan(_ref3) {
       color: e.isInUse === 1 ? e.color : "grey",
       key: e.deviceId,
       click: function click() {
-        return setModal(!modal);
+        return DeviceOnClick(e.deviceId);
       }
     });
   });
+
+  var handleChange = function handleChange(event) {
+    setCurrentDevice(_objectSpread(_objectSpread({}, currentDevice), {}, _defineProperty({}, event.target.name, event.target.value)));
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "unselectable"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", {
@@ -2671,15 +2749,19 @@ var FloorsPlan = function FloorsPlan(_ref3) {
     className: "floorImg",
     alt: "..."
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(DeviceWindow, {
-    modal: modal,
+    device: currentDevice,
+    isOpen: isOpenModal,
     click: function click() {
-      return setModal(!modal);
+      return setIsOpenModal(!isOpenModal);
+    },
+    change: function change(event) {
+      return handleChange(event);
     }
   }));
 };
 
-var mapStateToPropsFloorsPlan = function mapStateToPropsFloorsPlan(_ref4) {
-  var FloorsImages = _ref4.FloorsImages;
+var mapStateToPropsFloorsPlan = function mapStateToPropsFloorsPlan(_ref9) {
+  var FloorsImages = _ref9.FloorsImages;
   return {
     FloorsImages: FloorsImages
   };
@@ -2728,46 +2810,59 @@ var SiteService = /*#__PURE__*/function () {
     key: "GetDevices",
     value: function () {
       var _GetDevices = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var _store$getState, backendAPI, url, response, result;
+        var id,
+            _store$getState,
+            backendAPI,
+            url,
+            response,
+            result,
+            _args = arguments;
 
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                id = _args.length > 0 && _args[0] !== undefined ? _args[0] : 0;
                 _store$getState = _store__WEBPACK_IMPORTED_MODULE_0__.default.getState(), backendAPI = _store$getState.backendAPI;
                 url = backendAPI.url + backendAPI.devices;
-                _context.prev = 2;
-                _context.next = 5;
+
+                if (id > 0) {
+                  url = url + '/' + id;
+                }
+
+                ;
+                _context.prev = 5;
+                _context.next = 8;
                 return backendAPI.app.get(url);
 
-              case 5:
+              case 8:
                 response = _context.sent;
-                _context.next = 11;
+                _context.next = 14;
                 break;
 
-              case 8:
-                _context.prev = 8;
-                _context.t0 = _context["catch"](2);
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](5);
                 console.log("Can't get devices");
 
-              case 11:
+              case 14:
                 if (!(response.status === 200)) {
-                  _context.next = 14;
+                  _context.next = 17;
                   break;
                 }
 
                 result = response.data.records;
                 return _context.abrupt("return", result);
 
-              case 14:
+              case 17:
                 throw new Error('Service unavailable');
 
-              case 15:
+              case 18:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[2, 8]]);
+        }, _callee, null, [[5, 11]]);
       }));
 
       function GetDevices() {

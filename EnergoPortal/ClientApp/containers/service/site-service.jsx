@@ -4,9 +4,12 @@ import "regenerator-runtime/runtime";
 
 class SiteService {
 
-    async GetDevices() {
+    async GetDevices(id= 0) {
         const {backendAPI} = store.getState();
-        const url = backendAPI.url+backendAPI.devices;
+        let url = backendAPI.url+backendAPI.devices;
+        if (id>0){
+            url = url + '/'+id;
+        };
         let response;
         try {
             response = await backendAPI.app.get(url);

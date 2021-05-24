@@ -25,7 +25,6 @@ const Modal = ({isOpen, children}) => {
     };
     useEffect(()=>{
         isOpen?OpenModal():CloseModal();
-        console.log(isOpen);
     });
     const style ={
         display,

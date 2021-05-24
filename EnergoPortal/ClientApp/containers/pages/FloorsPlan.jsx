@@ -3,22 +3,54 @@ import { connect } from "react-redux";
 import {WithSiteService} from "../components/hoc";
 import Modal, {ModalHeader, ModalFooter, ModalBody} from "../components/Modal";
 
-const DeviceWindow = ({modal, click}) =>{
+const DeviceTextFieldsWithPlaceholders = {
+        "socketNumber":"Номер розетки",
+        "switchName":"Название свича",
+        "switchPort":"Номер порта на свиче",
+        "ipAddress":"IP адрес",
+        "macAddress":"МАС адрес",
+        "deviceName":"Название",
+        "phoneSocketNumber":"Номер розетки телефона",
+        "pbxPortNumber":"Порт АТС",
+        "phoneNumber":"Номер телефона",
+        "phoneId":"Инвентарный номер телефона",
+        "firstName":"Фамилия",
+        "lastName":"Имя",
+        "middleName":"Отчество",
+        "loginName":"Имя пользователя",
+        "mailAddress":"Адрес электронной почты",
+        "location":"Кабинет",
+        "memo":"Заметки"
+};
+const DeviceTextFields = Object.keys(DeviceTextFieldsWithPlaceholders);
+
+const InputField = ({ value, onchange, name, placeholder="", readonly = false}) =>{
     return(
-        <Modal isOpen={modal}>
+        <div className="input-group mb-3">
+            <input
+                type="text"
+                className="form-control"
+                placeholder={placeholder}
+                name={name}
+                value={value}
+                readOnly={readonly}
+                onChange={onchange}
+            />
+        </div>
+    );
+};
+
+const DeviceWindow = ({device, isOpen, click, change}) =>{
+
+    const InputFields = Object.entries(device).filter(([key,value])=>{DeviceTextFields.includes(key)}).map(([key,value])=> <InputField onchange={change} name={key} value={value} key={key} placeholder={DeviceTextFieldsWithPlaceholders[key]}/>);
+    return(
+        <Modal isOpen={isOpen}>
             <ModalHeader>
                 <h3>This is modal header</h3>
-                <button
-                    type="button"
-                    className="close"
-                    aria-label="Close"
-                    onClick={click}
-                >
-                    <span aria-hidden="true">&times;</span>
-                </button>
+
             </ModalHeader>
             <ModalBody>
-                <p>This is modal body</p>
+                {InputFields}
             </ModalBody>
             <ModalFooter>
                 <button
@@ -33,7 +65,7 @@ const DeviceWindow = ({modal, click}) =>{
                     className="btn btn-primary"
                     onClick={click}
                 >
-                    Save changes
+                    Сохранить
                 </button>
             </ModalFooter>
         </Modal>
@@ -57,17 +89,26 @@ const DeviceIcon = ({posX, posY, color, click }) => {
 
 const FloorsPlan = ({ SiteService, FloorsImages }) => {
     const [activeImage, setActiveImage] = useState(0);
-    const [isUpdated, setisUpdated] = useState(false);
+    const [isUpdated, setIsUpdated] = useState(false);
     const [devices, setDevices] = useState([]);
-    const [modal, setModal] = useState(false);
+    const [isOpenModal, setIsOpenModal] = useState(false);
+    const [currentDevice, setCurrentDevice] = useState({});
     useEffect(() => {
         if (!isUpdated) {
             SiteService.GetDevices().then(result=>{
                 setDevices(result);
-                setisUpdated(true);
+                setIsUpdated(true);
             });
         }
     });
+    const DeviceOnClick = (id) =>{
+        setIsOpenModal(!isOpenModal);
+        SiteService.GetDevices(id).then(result => {
+            setCurrentDevice(result[0]);
+        });
+
+    };
+
     const floortab = FloorsImages.map((element, index) => {
         const className = index === activeImage ? "FloorTabItem nav-link active" : "FloorTabItem nav-link";
 
@@ -77,10 +118,17 @@ const FloorsPlan = ({ SiteService, FloorsImages }) => {
             </li>
             );
     });
+
     const Devices = devices.filter(e=>(e.isEnabled && e.levelId===(activeImage+1))).map(e =>{
-        return(<DeviceIcon posX={e.posX} posY={e.posY} color ={e.isInUse===1?e.color:"grey"} key={e.deviceId} click={()=> setModal(!modal)} />);
+        return(<DeviceIcon posX={e.posX} posY={e.posY} color ={e.isInUse===1?e.color:"grey"} key={e.deviceId} click={()=> DeviceOnClick(e.deviceId)} />);
     })
 
+    const handleChange = (event) => {
+        setCurrentDevice({
+            ...currentDevice,
+            [event.target.name]:event.target.value,
+        });
+    };
     return (
         <div className="unselectable">
             <ul className="nav nav-tabs FloorTabs justify-content-center">
@@ -90,7 +138,12 @@ const FloorsPlan = ({ SiteService, FloorsImages }) => {
                 {Devices}
                 <img src={FloorsImages[activeImage].href} className="floorImg" alt="..." />
             </div>
-            <DeviceWindow modal={modal} click={()=> setModal(!modal)}/>
+            <DeviceWindow
+                device={currentDevice}
+                isOpen={isOpenModal}
+                click={()=> setIsOpenModal(!isOpenModal)}
+                change={(event) => handleChange(event)}
+            />
         </div> 
         );
 };
