@@ -7,6 +7,7 @@ using DBRepository;
 using Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using EnergoPortal.ViewModels;
 
 namespace EnergoPortal.Controllers
 {
@@ -23,5 +24,12 @@ namespace EnergoPortal.Controllers
         {
             return await _deviceRepository.GetDevices(id);
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "2")]
+        [HttpPut]
+        public async Task UpdateDevice ([FromBody] DeviceRequest device)
+        {
+            await _deviceRepository.UpdateDevice(device);
+        }
+
     }
 }

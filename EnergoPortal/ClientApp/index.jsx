@@ -8,8 +8,10 @@ import SiteService from "./containers/service";
 import {ServiceProvider} from "./containers/components/service-context";
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import {updateCurrentUser} from "./containers/actions/"
 
 const siteService = new SiteService();
+siteService.GetJWT().then(result=>store.dispatch(updateCurrentUser(result)));
 
 render(<Provider store={store}>
             <ServiceProvider value={siteService}>

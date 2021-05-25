@@ -1,6 +1,28 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./ClientApp/containers/actions/index.js":
+/*!***********************************************!*\
+  !*** ./ClientApp/containers/actions/index.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "updateCurrentUser": () => (/* binding */ updateCurrentUser)
+/* harmony export */ });
+const updateCurrentUser =({accessToken, userName, role})=> {
+  return {
+      type:"updateCurrentUser",
+      payload:{accessToken, userName, role},
+  }
+};
+
+
+
+/***/ }),
+
 /***/ "./ClientApp/containers/components/Modal/index.js":
 /*!********************************************************!*\
   !*** ./ClientApp/containers/components/Modal/index.js ***!
@@ -114,16 +136,32 @@ const initialState = {
     backendAPI:{
         url:"http://localhost:41409/api/",
         devices:"device",
+        user: "identity/token",
         app: axios__WEBPACK_IMPORTED_MODULE_2___default().create({
             withCredentials: false,
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
             },
         }),
-    }
+    },
+    CurrentUser:{
+        accessToken:"",
+        userName:"",
+        role:0,
+        tokenUpdated:false,
+        tokenNeedToBeUpdated:true,
+    },
 };
 const reducer = (state = initialState, action) => {
     switch (action.type) {
+        case "updateCurrentUser": {
+            const {accessToken,userName,role} = action.payload;
+            return {
+                ...state,
+                CurrentUser:{accessToken,userName, role, tokenUpdated:true, tokenNeedToBeUpdated:false },
+            };
+        }
+
         default:
             return {
                 ...state,
@@ -147,7 +185,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 const horisontalMenu = [
-    { id: "1", name: "Схема", href: "#", subId: [],},
+    { id: "1", name: "Схема", href: "/", subId: [],},
     { id: "2", name: "Справочник", href: "#", subId: [],},
     { id: "3", name: "Инструменты", href: "#", subId: [],},
     { id: "3-1", name: "Все активные пользователи AD", href: "#", subId: [], parentId:"3" },
@@ -2604,8 +2642,10 @@ var InputField = function InputField(_ref) {
 var DeviceWindow = function DeviceWindow(_ref2) {
   var device = _ref2.device,
       isOpen = _ref2.isOpen,
-      click = _ref2.click,
-      change = _ref2.change;
+      closeClick = _ref2.closeClick,
+      saveClick = _ref2.saveClick,
+      change = _ref2.change,
+      readonly = _ref2.readonly;
   var InputFields = Object.entries(device).filter(function (_ref3) {
     var _ref4 = _slicedToArray(_ref3, 2),
         key = _ref4[0],
@@ -2622,21 +2662,22 @@ var DeviceWindow = function DeviceWindow(_ref2) {
       name: key,
       value: value,
       key: key,
-      placeholder: DeviceTextFieldsWithPlaceholders[key]
+      placeholder: DeviceTextFieldsWithPlaceholders[key],
+      readonly: readonly
     });
   });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.default, {
     isOpen: isOpen
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalHeader, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "This is modal header")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalBody, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalHeader, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h4", null, device.deviceName)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalBody, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "row"
   }, InputFields)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalFooter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     type: "button",
     className: "btn btn-secondary",
-    onClick: click
+    onClick: closeClick
   }, "Close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     type: "button",
     className: "btn btn-primary",
-    onClick: click
+    onClick: saveClick
   }, "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C")));
 };
 
@@ -2667,32 +2708,44 @@ var DeviceIcon = function DeviceIcon(_ref7) {
 
 var FloorsPlan = function FloorsPlan(_ref8) {
   var SiteService = _ref8.SiteService,
-      FloorsImages = _ref8.FloorsImages;
+      FloorsImages = _ref8.FloorsImages,
+      CurrentUser = _ref8.CurrentUser;
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
       _useState2 = _slicedToArray(_useState, 2),
       activeImage = _useState2[0],
-      setActiveImage = _useState2[1];
+      setActiveImage = _useState2[1]; //текущий этаж
+
 
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
       isUpdated = _useState4[0],
-      setIsUpdated = _useState4[1];
+      setIsUpdated = _useState4[1]; //для обновления всех координат устройств установить в false
+
 
   var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
       _useState6 = _slicedToArray(_useState5, 2),
       devices = _useState6[0],
-      setDevices = _useState6[1];
+      setDevices = _useState6[1]; //координаты, цвета и т.д всех устройств
+
 
   var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState8 = _slicedToArray(_useState7, 2),
       isOpenModal = _useState8[0],
-      setIsOpenModal = _useState8[1];
+      setIsOpenModal = _useState8[1]; //модальное окно открыто ли
+
 
   var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}),
       _useState10 = _slicedToArray(_useState9, 2),
       currentDevice = _useState10[0],
-      setCurrentDevice = _useState10[1];
+      setCurrentDevice = _useState10[1]; //выбранное устройство
+
+
+  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      isChanged = _useState12[0],
+      setIsChanged = _useState12[1]; //были ли изменения, надо ли записывать.
+
 
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if (!isUpdated) {
@@ -2704,6 +2757,7 @@ var FloorsPlan = function FloorsPlan(_ref8) {
   });
 
   var DeviceOnClick = function DeviceOnClick(id) {
+    setIsChanged(false);
     setIsOpenModal(!isOpenModal);
     SiteService.GetDevices(id).then(function (result) {
       setCurrentDevice(result[0]);
@@ -2737,6 +2791,7 @@ var FloorsPlan = function FloorsPlan(_ref8) {
   });
 
   var handleChange = function handleChange(event) {
+    setIsChanged(true);
     setCurrentDevice(_objectSpread(_objectSpread({}, currentDevice), {}, _defineProperty({}, event.target.name, event.target.value)));
   };
 
@@ -2753,19 +2808,25 @@ var FloorsPlan = function FloorsPlan(_ref8) {
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(DeviceWindow, {
     device: currentDevice,
     isOpen: isOpenModal,
-    click: function click() {
+    closeClick: function closeClick() {
+      return setIsOpenModal(!isOpenModal);
+    },
+    saveClick: function saveClick() {
       return setIsOpenModal(!isOpenModal);
     },
     change: function change(event) {
       return handleChange(event);
-    }
+    },
+    readonly: CurrentUser.role === 1
   }));
 };
 
 var mapStateToPropsFloorsPlan = function mapStateToPropsFloorsPlan(_ref9) {
-  var FloorsImages = _ref9.FloorsImages;
+  var FloorsImages = _ref9.FloorsImages,
+      CurrentUser = _ref9.CurrentUser;
   return {
-    FloorsImages: FloorsImages
+    FloorsImages: FloorsImages,
+    CurrentUser: CurrentUser
   };
 };
 
@@ -2806,65 +2867,104 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var SiteService = /*#__PURE__*/function () {
   function SiteService() {
     _classCallCheck(this, SiteService);
+
+    this.backendAPI = _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().backendAPI;
   }
 
   _createClass(SiteService, [{
-    key: "GetDevices",
+    key: "WaitForToken",
     value: function () {
-      var _GetDevices = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var id,
-            _store$getState,
-            backendAPI,
-            url,
-            response,
-            result,
-            _args = arguments;
-
+      var _WaitForToken = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                id = _args.length > 0 && _args[0] !== undefined ? _args[0] : 0;
-                _store$getState = _store__WEBPACK_IMPORTED_MODULE_0__.default.getState(), backendAPI = _store$getState.backendAPI;
-                url = backendAPI.url + backendAPI.devices;
+                return _context.abrupt("return", new Promise(function (resolve) {
+                  var timerId = setInterval(function () {
+                    if (_store__WEBPACK_IMPORTED_MODULE_0__.default.getState().CurrentUser.tokenUpdated) {
+                      resolve();
+                      clearInterval(timerId);
+                    }
+                  }, 50);
+                }));
+
+              case 1:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      function WaitForToken() {
+        return _WaitForToken.apply(this, arguments);
+      }
+
+      return WaitForToken;
+    }()
+  }, {
+    key: "GetDevices",
+    value: function () {
+      var _GetDevices = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+        var id,
+            AuthHeader,
+            url,
+            response,
+            result,
+            _args2 = arguments;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                id = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : 0;
+                _context2.next = 3;
+                return this.WaitForToken();
+
+              case 3:
+                AuthHeader = {
+                  'Authorization': 'Bearer ' + _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().CurrentUser.accessToken
+                };
+                url = this.backendAPI.url + this.backendAPI.devices;
 
                 if (id > 0) {
                   url = url + '/' + id;
                 }
 
                 ;
-                _context.prev = 5;
-                _context.next = 8;
-                return backendAPI.app.get(url);
+                _context2.prev = 7;
+                _context2.next = 10;
+                return this.backendAPI.app.get(url, {
+                  headers: AuthHeader
+                });
 
-              case 8:
-                response = _context.sent;
-                _context.next = 14;
+              case 10:
+                response = _context2.sent;
+                _context2.next = 16;
                 break;
 
-              case 11:
-                _context.prev = 11;
-                _context.t0 = _context["catch"](5);
+              case 13:
+                _context2.prev = 13;
+                _context2.t0 = _context2["catch"](7);
                 console.log("Can't get devices");
 
-              case 14:
+              case 16:
                 if (!(response.status === 200)) {
-                  _context.next = 17;
+                  _context2.next = 19;
                   break;
                 }
 
                 result = response.data.records;
-                return _context.abrupt("return", result);
+                return _context2.abrupt("return", result);
 
-              case 17:
+              case 19:
                 throw new Error('Service unavailable');
 
-              case 18:
+              case 20:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, null, [[5, 11]]);
+        }, _callee2, this, [[7, 13]]);
       }));
 
       function GetDevices() {
@@ -2872,6 +2972,56 @@ var SiteService = /*#__PURE__*/function () {
       }
 
       return GetDevices;
+    }()
+  }, {
+    key: "GetJWT",
+    value: function () {
+      var _GetJWT = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+        var url, response, result;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                url = this.backendAPI.url + this.backendAPI.user;
+                _context3.prev = 1;
+                _context3.next = 4;
+                return this.backendAPI.app.get(url);
+
+              case 4:
+                response = _context3.sent;
+                _context3.next = 10;
+                break;
+
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](1);
+                console.log("Can't get users");
+
+              case 10:
+                if (!(response.status === 200)) {
+                  _context3.next = 13;
+                  break;
+                }
+
+                result = response.data;
+                return _context3.abrupt("return", result);
+
+              case 13:
+                throw new Error('Service unavailable');
+
+              case 14:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this, [[1, 7]]);
+      }));
+
+      function GetJWT() {
+        return _GetJWT.apply(this, arguments);
+      }
+
+      return GetJWT;
     }()
   }]);
 
@@ -54565,13 +54715,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _containers_components_App_App_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./containers/components/App/App.jsx */ "./ClientApp/containers/components/App/App.jsx");
 /* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store */ "./ClientApp/store.js");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _containers_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./containers/service */ "./ClientApp/containers/service/index.js");
 /* harmony import */ var _containers_components_service_context__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./containers/components/service-context */ "./ClientApp/containers/components/service-context/index.js");
 /* harmony import */ var core_js_stable__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! core-js/stable */ "./node_modules/core-js/stable/index.js");
 /* harmony import */ var core_js_stable__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_stable__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! regenerator-runtime/runtime */ "./node_modules/regenerator-runtime/runtime.js");
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _containers_actions___WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./containers/actions/ */ "./ClientApp/containers/actions/index.js");
+
 
 
 
@@ -54583,11 +54735,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var siteService = new _containers_service__WEBPACK_IMPORTED_MODULE_5__.default();
+siteService.GetJWT().then(function (result) {
+  return _store__WEBPACK_IMPORTED_MODULE_4__.default.dispatch((0,_containers_actions___WEBPACK_IMPORTED_MODULE_9__.updateCurrentUser)(result));
+});
 (0,react_dom__WEBPACK_IMPORTED_MODULE_1__.render)( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_redux__WEBPACK_IMPORTED_MODULE_2__.Provider, {
   store: _store__WEBPACK_IMPORTED_MODULE_4__.default
 }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_containers_components_service_context__WEBPACK_IMPORTED_MODULE_6__.ServiceProvider, {
   value: siteService
-}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_9__.BrowserRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_containers_components_App_App_jsx__WEBPACK_IMPORTED_MODULE_3__.default, null)))), document.getElementById('content'));
+}, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.BrowserRouter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_containers_components_App_App_jsx__WEBPACK_IMPORTED_MODULE_3__.default, null)))), document.getElementById('content'));
 })();
 
 /******/ })()

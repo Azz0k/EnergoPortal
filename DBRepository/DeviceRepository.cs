@@ -18,6 +18,9 @@ namespace DBRepository
     public interface IDeviceRepository
     {
         public Task<NetworkDevices<Device>> GetDevices(int id = 0);
+        public Task UpdateDevice(Device device);
+        public Task AddDevice(Device device);
+        public Task DeleteDevice(int deviceId);
     }
     public class DeviceRepository : BaseRepository, IDeviceRepository
     { 
@@ -43,6 +46,31 @@ namespace DBRepository
             }
             return result;
             
+        }
+        public async Task UpdateDevice(Device device)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                context.Devices.Update(device);
+                await context.SaveChangesAsync();
+            }
+        }
+        public async Task AddDevice(Device device)
+        {
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                context.Devices.Add(device);
+                await context.SaveChangesAsync();
+            }
+        }
+        public async Task DeleteDevice(int deviceId)
+        {
+            Device device = new Device() { DeviceId = deviceId };
+            using (var context = ContextFactory.CreateDbContext(ConnectionString))
+            {
+                context.Devices.Remove(device);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

@@ -40,14 +40,24 @@ const InputField = ({ value, onchange, name, placeholder="", readonly = false}) 
     );
 };
 
-const DeviceWindow = ({device, isOpen, click, change}) =>{
+const DeviceWindow = ({device, isOpen, closeClick,saveClick, change, readonly}) =>{
 
-    const InputFields = Object.entries(device).filter(([key,value])=>DeviceTextFields.includes(key)).map(([key,value])=> <InputField onchange={change} name={key} value={value} key={key} placeholder={DeviceTextFieldsWithPlaceholders[key]}/>);
+    const InputFields = Object
+        .entries(device)
+        .filter(([key,value])=>DeviceTextFields.includes(key))
+        .map(([key,value])=>
+            <InputField
+                onchange={change}
+                name={key}
+                value={value}
+                key={key}
+                placeholder={DeviceTextFieldsWithPlaceholders[key]}
+                readonly={readonly}
+            />);
     return(
         <Modal isOpen={isOpen}>
             <ModalHeader>
-                <h3>This is modal header</h3>
-
+                <h4>{device.deviceName}</h4>
             </ModalHeader>
             <ModalBody>
                 <div className="row">
@@ -58,14 +68,14 @@ const DeviceWindow = ({device, isOpen, click, change}) =>{
                 <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={click}
+                    onClick={closeClick}
                 >
                     Close
                 </button>
                 <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={click}
+                    onClick={saveClick}
                 >
                     Сохранить
                 </button>
@@ -89,12 +99,13 @@ const DeviceIcon = ({posX, posY, color, click }) => {
 };
 
 
-const FloorsPlan = ({ SiteService, FloorsImages }) => {
-    const [activeImage, setActiveImage] = useState(0);
-    const [isUpdated, setIsUpdated] = useState(false);
-    const [devices, setDevices] = useState([]);
-    const [isOpenModal, setIsOpenModal] = useState(false);
-    const [currentDevice, setCurrentDevice] = useState({});
+const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
+    const [activeImage, setActiveImage] = useState(0); //текущий этаж
+    const [isUpdated, setIsUpdated] = useState(false); //для обновления всех координат устройств установить в false
+    const [devices, setDevices] = useState([]);//координаты, цвета и т.д всех устройств
+    const [isOpenModal, setIsOpenModal] = useState(false); //модальное окно открыто ли
+    const [currentDevice, setCurrentDevice] = useState({}); //выбранное устройство
+    const [isChanged, setIsChanged] = useState(false); //были ли изменения, надо ли записывать.
     useEffect(() => {
         if (!isUpdated) {
             SiteService.GetDevices().then(result=>{
@@ -104,6 +115,7 @@ const FloorsPlan = ({ SiteService, FloorsImages }) => {
         }
     });
     const DeviceOnClick = (id) =>{
+        setIsChanged(false);
         setIsOpenModal(!isOpenModal);
         SiteService.GetDevices(id).then(result => {
             setCurrentDevice(result[0]);
@@ -126,6 +138,7 @@ const FloorsPlan = ({ SiteService, FloorsImages }) => {
     })
 
     const handleChange = (event) => {
+        setIsChanged(true);
         setCurrentDevice({
             ...currentDevice,
             [event.target.name]:event.target.value,
@@ -143,15 +156,17 @@ const FloorsPlan = ({ SiteService, FloorsImages }) => {
             <DeviceWindow
                 device={currentDevice}
                 isOpen={isOpenModal}
-                click={()=> setIsOpenModal(!isOpenModal)}
+                closeClick={()=> setIsOpenModal(!isOpenModal)}
+                saveClick={() => setIsOpenModal(!isOpenModal)}
                 change={(event) => handleChange(event)}
+                readonly={CurrentUser.role===1}
             />
         </div> 
         );
 };
 
-const mapStateToPropsFloorsPlan = ({ FloorsImages }) => {
-    return { FloorsImages };
+const mapStateToPropsFloorsPlan = ({ FloorsImages, CurrentUser }) => {
+    return { FloorsImages,CurrentUser };
 };
 
 export default WithSiteService(connect(mapStateToPropsFloorsPlan)(FloorsPlan));
