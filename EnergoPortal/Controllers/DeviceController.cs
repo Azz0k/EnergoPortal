@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using DBRepository;
 using Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace EnergoPortal.Controllers
 {
@@ -14,6 +16,8 @@ namespace EnergoPortal.Controllers
     {
         IDeviceRepository _deviceRepository;
         public DeviceController(IDeviceRepository deviceRepository) => _deviceRepository = deviceRepository;
+        //[Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "1")]
         [HttpGet]
         public async Task<NetworkDevices<Device>> GetDevices (int id)
         {

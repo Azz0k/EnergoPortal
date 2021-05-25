@@ -27,6 +27,10 @@
     position:absolute;
 }
 
+.DeviceInput{
+    min-width:200px;
+}
+
 .deviceRect {
     position: absolute;
     width: 19px;

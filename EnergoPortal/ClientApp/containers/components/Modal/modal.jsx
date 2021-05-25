@@ -5,7 +5,7 @@ export const ModalHeader = props => {
 };
 
 export const ModalBody = props => {
-    return <div className="modal-body">{props.children}</div>;
+    return <div className="modal-body container">{props.children}</div>;
 };
 
 export const ModalFooter = props => {
@@ -35,7 +35,7 @@ const Modal = ({isOpen, children}) => {
              role="dialog"
              aria-hidden="true"
              style={ style }>
-            <div className="modal-dialog" role="document">
+            <div className="modal-dialog modal-lg" role="document">
                 <div className="modal-content">{children}</div>
             </div>
         </div>

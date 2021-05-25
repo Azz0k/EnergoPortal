@@ -19,6 +19,7 @@ namespace DBRepository
         }
 
         public virtual DbSet<Device> Devices { get; set; }
+        public virtual DbSet<User> Users { get; set; }
        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -2294,7 +2294,7 @@ var ModalHeader = function ModalHeader(props) {
 };
 var ModalBody = function ModalBody(props) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "modal-body"
+    className: "modal-body container"
   }, props.children);
 };
 var ModalFooter = function ModalFooter(props) {
@@ -2340,7 +2340,7 @@ var Modal = function Modal(_ref) {
     "aria-hidden": "true",
     style: style
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "modal-dialog",
+    className: "modal-dialog modal-lg",
     role: "document"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "modal-content"
@@ -2589,10 +2589,10 @@ var InputField = function InputField(_ref) {
       _ref$readonly = _ref.readonly,
       readonly = _ref$readonly === void 0 ? false : _ref$readonly;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "input-group mb-3"
+    className: "input-group mb-3 DeviceInput col-sm"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
     type: "text",
-    className: "form-control",
+    className: "form-control ",
     placeholder: placeholder,
     name: name,
     value: value,
@@ -2611,7 +2611,7 @@ var DeviceWindow = function DeviceWindow(_ref2) {
         key = _ref4[0],
         value = _ref4[1];
 
-    DeviceTextFields.includes(key);
+    return DeviceTextFields.includes(key);
   }).map(function (_ref5) {
     var _ref6 = _slicedToArray(_ref5, 2),
         key = _ref6[0],
@@ -2627,7 +2627,9 @@ var DeviceWindow = function DeviceWindow(_ref2) {
   });
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.default, {
     isOpen: isOpen
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalHeader, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "This is modal header")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalBody, null, InputFields), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalFooter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalHeader, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "This is modal header")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalBody, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "row"
+  }, InputFields)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalFooter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     type: "button",
     className: "btn btn-secondary",
     onClick: click

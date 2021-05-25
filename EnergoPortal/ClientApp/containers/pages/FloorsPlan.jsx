@@ -26,10 +26,10 @@ const DeviceTextFields = Object.keys(DeviceTextFieldsWithPlaceholders);
 
 const InputField = ({ value, onchange, name, placeholder="", readonly = false}) =>{
     return(
-        <div className="input-group mb-3">
+        <div className="input-group mb-3 DeviceInput col-sm">
             <input
                 type="text"
-                className="form-control"
+                className="form-control "
                 placeholder={placeholder}
                 name={name}
                 value={value}
@@ -42,7 +42,7 @@ const InputField = ({ value, onchange, name, placeholder="", readonly = false}) 
 
 const DeviceWindow = ({device, isOpen, click, change}) =>{
 
-    const InputFields = Object.entries(device).filter(([key,value])=>{DeviceTextFields.includes(key)}).map(([key,value])=> <InputField onchange={change} name={key} value={value} key={key} placeholder={DeviceTextFieldsWithPlaceholders[key]}/>);
+    const InputFields = Object.entries(device).filter(([key,value])=>DeviceTextFields.includes(key)).map(([key,value])=> <InputField onchange={change} name={key} value={value} key={key} placeholder={DeviceTextFieldsWithPlaceholders[key]}/>);
     return(
         <Modal isOpen={isOpen}>
             <ModalHeader>
@@ -50,7 +50,9 @@ const DeviceWindow = ({device, isOpen, click, change}) =>{
 
             </ModalHeader>
             <ModalBody>
-                {InputFields}
+                <div className="row">
+                    {InputFields}
+                </div>
             </ModalBody>
             <ModalFooter>
                 <button
