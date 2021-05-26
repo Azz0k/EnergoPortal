@@ -2682,28 +2682,21 @@ var DeviceWindow = function DeviceWindow(_ref2) {
 };
 
 var DeviceIcon = function DeviceIcon(_ref7) {
-  var posX = _ref7.posX,
+  var id = _ref7.id,
+      posX = _ref7.posX,
       posY = _ref7.posY,
       color = _ref7.color,
       click = _ref7.click;
-  var style = {
-    top: posY,
-    left: posX
-  };
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
-    className: "deviceRect",
-    xmlns: "http://www.w3.org/2000/svg",
-    width: "19",
-    height: "19",
-    style: style,
-    onClick: click
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
+    x: posX,
+    y: posY,
     width: "19",
     height: "19",
     fill: color,
     stroke: "black",
-    strokeWidth: "2"
-  }));
+    strokeWidth: "2",
+    onClick: click
+  });
 };
 
 var FloorsPlan = function FloorsPlan(_ref8) {
@@ -2780,6 +2773,7 @@ var FloorsPlan = function FloorsPlan(_ref8) {
     return e.isEnabled && e.levelId === activeImage + 1;
   }).map(function (e) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(DeviceIcon, {
+      id: e.deviceId,
       posX: e.posX,
       posY: e.posY,
       color: e.isInUse === 1 ? e.color : "grey",
@@ -2795,13 +2789,28 @@ var FloorsPlan = function FloorsPlan(_ref8) {
     setCurrentDevice(_objectSpread(_objectSpread({}, currentDevice), {}, _defineProperty({}, event.target.name, event.target.value)));
   };
 
+  var handleSaveClick = function handleSaveClick() {
+    if (isChanged) {
+      SiteService.PutDevice(currentDevice).then(function (r) {
+        return console.log(r);
+      });
+    }
+
+    setIsOpenModal(!isOpenModal);
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "unselectable"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", {
     className: "nav nav-tabs FloorTabs justify-content-center"
   }, floortab), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "imageContainer"
-  }, Devices, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
+    className: "DeviceSvg",
+    xmlns: "http://www.w3.org/2000/svg",
+    width: "1600",
+    height: "800"
+  }, Devices), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
     src: FloorsImages[activeImage].href,
     className: "floorImg",
     alt: "..."
@@ -2812,7 +2821,7 @@ var FloorsPlan = function FloorsPlan(_ref8) {
       return setIsOpenModal(!isOpenModal);
     },
     saveClick: function saveClick() {
-      return setIsOpenModal(!isOpenModal);
+      return handleSaveClick();
     },
     change: function change(event) {
       return handleChange(event);
@@ -2930,41 +2939,40 @@ var SiteService = /*#__PURE__*/function () {
                   url = url + '/' + id;
                 }
 
-                ;
-                _context2.prev = 7;
-                _context2.next = 10;
+                _context2.prev = 6;
+                _context2.next = 9;
                 return this.backendAPI.app.get(url, {
                   headers: AuthHeader
                 });
 
-              case 10:
+              case 9:
                 response = _context2.sent;
-                _context2.next = 16;
+                _context2.next = 15;
                 break;
 
-              case 13:
-                _context2.prev = 13;
-                _context2.t0 = _context2["catch"](7);
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](6);
                 console.log("Can't get devices");
 
-              case 16:
+              case 15:
                 if (!(response.status === 200)) {
-                  _context2.next = 19;
+                  _context2.next = 18;
                   break;
                 }
 
                 result = response.data.records;
                 return _context2.abrupt("return", result);
 
-              case 19:
+              case 18:
                 throw new Error('Service unavailable');
 
-              case 20:
+              case 19:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[7, 13]]);
+        }, _callee2, this, [[6, 12]]);
       }));
 
       function GetDevices() {
@@ -3022,6 +3030,61 @@ var SiteService = /*#__PURE__*/function () {
       }
 
       return GetJWT;
+    }()
+  }, {
+    key: "PutDevice",
+    value: function () {
+      var _PutDevice = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(device) {
+        var AuthHeader, url, data, response;
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                AuthHeader = {
+                  'Authorization': 'Bearer ' + _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().CurrentUser.accessToken
+                };
+                url = this.backendAPI.url + this.backendAPI.devices;
+                data = JSON.stringify(device);
+                _context4.prev = 3;
+                _context4.next = 6;
+                return this.backendAPI.app.put(url, data, {
+                  headers: AuthHeader
+                });
+
+              case 6:
+                response = _context4.sent;
+                _context4.next = 12;
+                break;
+
+              case 9:
+                _context4.prev = 9;
+                _context4.t0 = _context4["catch"](3);
+                console.log("Can't get devices");
+
+              case 12:
+                if (!(response.status === 200)) {
+                  _context4.next = 14;
+                  break;
+                }
+
+                return _context4.abrupt("return", response);
+
+              case 14:
+                throw new Error('Service unavailable');
+
+              case 15:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this, [[3, 9]]);
+      }));
+
+      function PutDevice(_x) {
+        return _PutDevice.apply(this, arguments);
+      }
+
+      return PutDevice;
     }()
   }]);
 

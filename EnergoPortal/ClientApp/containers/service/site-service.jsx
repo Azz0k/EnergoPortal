@@ -25,7 +25,7 @@ class SiteService {
         let url = this.backendAPI.url+this.backendAPI.devices;
         if (id>0){
             url = url + '/'+id;
-        };
+        }
         let response;
         try {
             response = await this.backendAPI.app.get(url,{ headers: AuthHeader });
@@ -55,6 +55,23 @@ class SiteService {
         }
         throw new Error('Service unavailable');
     };
+
+    async PutDevice(device){
+        let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
+        let url = this.backendAPI.url+this.backendAPI.devices;
+        const data = JSON.stringify(device);
+        let response;
+        try {
+            response = await this.backendAPI.app.put(url,data,{ headers: AuthHeader });
+        }
+        catch (e){
+            console.log("Can't get devices");
+        }
+        if (response.status === 200) {
+            return response;
+        }
+        throw new Error('Service unavailable');
+    }
 }
 
 

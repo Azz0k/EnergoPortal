@@ -15,7 +15,7 @@ using DBRepository;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Identity;
-
+using Microsoft.AspNetCore.Authentication.Negotiate;
 namespace TestWebApp.Controllers
 {
 	

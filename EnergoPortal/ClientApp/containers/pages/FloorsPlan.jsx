@@ -85,16 +85,16 @@ const DeviceWindow = ({device, isOpen, closeClick,saveClick, change, readonly}) 
 
 };
 
-const DeviceIcon = ({posX, posY, color, click }) => {
-    const style = {
-        top: posY,
-        left: posX,
-    };
-
+const DeviceIcon = ({id, posX, posY, color, click  }) => {
     return (
-        <svg className="deviceRect" xmlns="http://www.w3.org/2000/svg" width="19" height="19" style={style} onClick={click}>
-            <rect width="19" height="19" fill={color} stroke="black"  strokeWidth="2" />
-        </svg>
+            <rect
+                x={posX} y={posY}
+                width="19" height="19"
+                fill={color}
+                stroke="black"
+                strokeWidth="2"
+                onClick={click}
+            />
     );
 };
 
@@ -134,7 +134,15 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
     });
 
     const Devices = devices.filter(e=>(e.isEnabled && e.levelId===(activeImage+1))).map(e =>{
-        return(<DeviceIcon posX={e.posX} posY={e.posY} color ={e.isInUse===1?e.color:"grey"} key={e.deviceId} click={()=> DeviceOnClick(e.deviceId)} />);
+        return(
+            <DeviceIcon
+                id={e.deviceId}
+                posX={e.posX} posY={e.posY}
+                color ={e.isInUse===1?e.color:"grey"}
+                key={e.deviceId}
+                click={()=> DeviceOnClick(e.deviceId)}
+
+            />);
     })
 
     const handleChange = (event) => {
@@ -144,20 +152,29 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
             [event.target.name]:event.target.value,
         });
     };
+    const  handleSaveClick =()=>{
+        if (isChanged){
+            SiteService.PutDevice(currentDevice).then(r => console.log(r));
+        }
+        setIsOpenModal(!isOpenModal);
+    };
+
     return (
         <div className="unselectable">
             <ul className="nav nav-tabs FloorTabs justify-content-center">
                 {floortab}
             </ul>
             <div className="imageContainer">
-                {Devices}
+                <svg className="DeviceSvg" xmlns="http://www.w3.org/2000/svg" width="1600" height="800">
+                    {Devices}
+                </svg>
                 <img src={FloorsImages[activeImage].href} className="floorImg" alt="..." />
             </div>
             <DeviceWindow
                 device={currentDevice}
                 isOpen={isOpenModal}
                 closeClick={()=> setIsOpenModal(!isOpenModal)}
-                saveClick={() => setIsOpenModal(!isOpenModal)}
+                saveClick={() => handleSaveClick()}
                 change={(event) => handleChange(event)}
                 readonly={CurrentUser.role===1}
             />

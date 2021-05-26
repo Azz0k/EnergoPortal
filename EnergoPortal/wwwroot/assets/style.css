@@ -30,8 +30,11 @@
 .DeviceInput{
     min-width:200px;
 }
+.DeviceSvg{
+    position: absolute;
+}
 
-.deviceRect {
+rect {
     position: absolute;
     width: 19px;
     height: 19px;
@@ -45,6 +48,8 @@
     transition-property: transform;
 }
 
-    .deviceRect:hover {
-        border-radius: 50%;
+
+rect:hover {
+
+        rx:15;
     }

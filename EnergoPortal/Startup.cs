@@ -17,7 +17,8 @@ using System.Text;
 using TestWebApp.Helpers;
 
 using DBRepository.Interfaces;
-
+using Microsoft.AspNetCore.Server.IISIntegration;
+using Microsoft.AspNetCore.Authentication.Negotiate;
 
 namespace EnergoPortal
 {
@@ -34,7 +35,8 @@ namespace EnergoPortal
         {
             services.AddMvc(mvcOptons => mvcOptons.EnableEndpointRouting=false)
                 .AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition=System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
+                services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => 
                 {
                     options.RequireHttpsMetadata = false;
@@ -49,6 +51,7 @@ namespace EnergoPortal
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+            //services.AddAuthentication(IISDefaults.AuthenticationScheme);
             services.AddScoped<IRepositoryContextFactory, RepositoryContextFactory>();
             services.AddScoped<IDeviceRepository>(provider => new DeviceRepository(Configuration.GetConnectionString("DefaultConnection"), provider.GetService<IRepositoryContextFactory>()));
             services.AddScoped<IIdentityRepository>(provider => new IdentityRepository(Configuration.GetConnectionString("DefaultConnection"), provider.GetService<IRepositoryContextFactory>()));

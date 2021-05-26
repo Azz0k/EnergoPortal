@@ -26,7 +26,7 @@ namespace EnergoPortal.Controllers
         }
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "2")]
         [HttpPut]
-        public async Task UpdateDevice ([FromBody] DeviceRequest device)
+        public async Task UpdateDevice ([FromBody] Device device)
         {
             await _deviceRepository.UpdateDevice(device);
         }
