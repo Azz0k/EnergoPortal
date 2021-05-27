@@ -23,6 +23,26 @@ const updateCurrentUser =({accessToken, userName, role})=> {
 
 /***/ }),
 
+/***/ "./ClientApp/containers/components/FormElements/index.js":
+/*!***************************************************************!*\
+  !*** ./ClientApp/containers/components/FormElements/index.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "InputSelectField": () => (/* reexport safe */ _FormElements_jsx__WEBPACK_IMPORTED_MODULE_0__.InputSelectField),
+/* harmony export */   "InputCheckBox": () => (/* reexport safe */ _FormElements_jsx__WEBPACK_IMPORTED_MODULE_0__.InputCheckBox),
+/* harmony export */   "InputTextField": () => (/* reexport safe */ _FormElements_jsx__WEBPACK_IMPORTED_MODULE_0__.InputTextField),
+/* harmony export */   "DeviceIcon": () => (/* reexport safe */ _FormElements_jsx__WEBPACK_IMPORTED_MODULE_0__.DeviceIcon)
+/* harmony export */ });
+/* harmony import */ var _FormElements_jsx__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FormElements.jsx */ "./ClientApp/containers/components/FormElements/FormElements.jsx");
+
+
+
+/***/ }),
+
 /***/ "./ClientApp/containers/components/Modal/index.js":
 /*!********************************************************!*\
   !*** ./ClientApp/containers/components/Modal/index.js ***!
@@ -2297,6 +2317,116 @@ var App = function App() {
 
 /***/ }),
 
+/***/ "./ClientApp/containers/components/FormElements/FormElements.jsx":
+/*!***********************************************************************!*\
+  !*** ./ClientApp/containers/components/FormElements/FormElements.jsx ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "InputSelectField": () => (/* binding */ InputSelectField),
+/* harmony export */   "InputCheckBox": () => (/* binding */ InputCheckBox),
+/* harmony export */   "InputTextField": () => (/* binding */ InputTextField),
+/* harmony export */   "DeviceIcon": () => (/* binding */ DeviceIcon)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+
+var InputTextField = function InputTextField(_ref) {
+  var value = _ref.value,
+      onchange = _ref.onchange,
+      name = _ref.name,
+      _ref$placeholder = _ref.placeholder,
+      placeholder = _ref$placeholder === void 0 ? "" : _ref$placeholder,
+      _ref$readonly = _ref.readonly,
+      readonly = _ref$readonly === void 0 ? false : _ref$readonly;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "input-group mb-3 DeviceInput col-sm"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    type: "text",
+    className: "form-control ",
+    placeholder: placeholder,
+    name: name,
+    value: value,
+    readOnly: readonly,
+    onChange: onchange
+  }));
+};
+
+var InputCheckBox = function InputCheckBox(_ref2) {
+  var value = _ref2.value,
+      onchange = _ref2.onchange,
+      name = _ref2.name,
+      placeholder = _ref2.placeholder,
+      _ref2$readonly = _ref2.readonly,
+      readonly = _ref2$readonly === void 0 ? false : _ref2$readonly;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "form-check mb-3 DeviceInput col-sm"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+    type: "checkbox",
+    className: "form-check-input",
+    name: name,
+    id: name,
+    checked: !!value,
+    disabled: readonly,
+    onChange: onchange
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", {
+    className: "form-check-label",
+    htmlFor: name
+  }, placeholder));
+};
+
+var InputSelectField = function InputSelectField(_ref3) {
+  var value = _ref3.value,
+      onchange = _ref3.onchange,
+      name = _ref3.name,
+      _ref3$readonly = _ref3.readonly,
+      readonly = _ref3$readonly === void 0 ? false : _ref3$readonly;
+  var typeValues = ["Компьютер", "Принтер", "WiFi", "Другое", "Камера", "Регистратор"];
+  var options = typeValues.map(function (el) {
+    if (el === value) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
+      key: el,
+      value: el,
+      selected: true
+    }, el);else return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("option", {
+      key: el,
+      value: el
+    }, el);
+  });
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+    className: "mb-3 DeviceInput col-sm"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("select", {
+    className: "form-select",
+    onChange: onchange,
+    disabled: readonly,
+    name: name
+  }, options));
+};
+
+var DeviceIcon = function DeviceIcon(_ref4) {
+  var id = _ref4.id,
+      posX = _ref4.posX,
+      posY = _ref4.posY,
+      color = _ref4.color,
+      click = _ref4.click;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
+    x: posX,
+    y: posY,
+    width: "19",
+    height: "19",
+    fill: color,
+    stroke: "black",
+    strokeWidth: "2",
+    onClick: click
+  });
+};
+
+
+
+/***/ }),
+
 /***/ "./ClientApp/containers/components/Modal/modal.jsx":
 /*!*********************************************************!*\
   !*** ./ClientApp/containers/components/Modal/modal.jsx ***!
@@ -2575,6 +2705,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 /* harmony import */ var _components_hoc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/hoc */ "./ClientApp/containers/components/hoc/index.js");
 /* harmony import */ var _components_Modal__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Modal */ "./ClientApp/containers/components/Modal/index.js");
+/* harmony import */ var _components_FormElements__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/FormElements */ "./ClientApp/containers/components/FormElements/index.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -2597,6 +2728,42 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
+var EmptyDevice = {
+  color: "",
+  deviceId: 0,
+  deviceName: "",
+  firstName: "",
+  ipAddress: "",
+  isEnabled: 0,
+  isInUse: 0,
+  lastName: "",
+  levelId: 0,
+  location: "",
+  loginName: "",
+  macAddress: "",
+  mailAddress: "",
+  memo: "",
+  middleName: "",
+  pbxPortNumber: "",
+  phoneId: "",
+  phoneNumber: "",
+  phoneSocketNumber: "",
+  posX: 0,
+  posY: 0,
+  socketNumber: "",
+  switchName: "",
+  switchPort: "",
+  type: ""
+};
+var TypesToColors = {
+  "Компьютер": "Red",
+  "Принтер": "Green",
+  "WiFi": "Blue",
+  "Другое": "Yellow",
+  "Камера": "Violet",
+  "Регистратор": "Black"
+};
 var DeviceTextFieldsWithPlaceholders = {
   "socketNumber": "Номер розетки",
   "switchName": "Название свича",
@@ -2618,46 +2785,25 @@ var DeviceTextFieldsWithPlaceholders = {
 };
 var DeviceTextFields = Object.keys(DeviceTextFieldsWithPlaceholders);
 
-var InputField = function InputField(_ref) {
-  var value = _ref.value,
-      onchange = _ref.onchange,
-      name = _ref.name,
-      _ref$placeholder = _ref.placeholder,
-      placeholder = _ref$placeholder === void 0 ? "" : _ref$placeholder,
-      _ref$readonly = _ref.readonly,
-      readonly = _ref$readonly === void 0 ? false : _ref$readonly;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "input-group mb-3 DeviceInput col-sm"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
-    type: "text",
-    className: "form-control ",
-    placeholder: placeholder,
-    name: name,
-    value: value,
-    readOnly: readonly,
-    onChange: onchange
-  }));
-};
-
-var DeviceWindow = function DeviceWindow(_ref2) {
-  var device = _ref2.device,
-      isOpen = _ref2.isOpen,
-      closeClick = _ref2.closeClick,
-      saveClick = _ref2.saveClick,
-      change = _ref2.change,
-      readonly = _ref2.readonly;
-  var InputFields = Object.entries(device).filter(function (_ref3) {
-    var _ref4 = _slicedToArray(_ref3, 2),
-        key = _ref4[0],
-        value = _ref4[1];
+var DeviceWindow = function DeviceWindow(_ref) {
+  var device = _ref.device,
+      isOpen = _ref.isOpen,
+      closeClick = _ref.closeClick,
+      saveClick = _ref.saveClick,
+      change = _ref.change,
+      readonly = _ref.readonly;
+  var InputTextFields = Object.entries(device).filter(function (_ref2) {
+    var _ref3 = _slicedToArray(_ref2, 2),
+        key = _ref3[0],
+        value = _ref3[1];
 
     return DeviceTextFields.includes(key);
-  }).map(function (_ref5) {
-    var _ref6 = _slicedToArray(_ref5, 2),
-        key = _ref6[0],
-        value = _ref6[1];
+  }).map(function (_ref4) {
+    var _ref5 = _slicedToArray(_ref4, 2),
+        key = _ref5[0],
+        value = _ref5[1];
 
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(InputField, {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_FormElements__WEBPACK_IMPORTED_MODULE_4__.InputTextField, {
       onchange: change,
       name: key,
       value: value,
@@ -2670,7 +2816,20 @@ var DeviceWindow = function DeviceWindow(_ref2) {
     isOpen: isOpen
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalHeader, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h4", null, device.deviceName)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalBody, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "row"
-  }, InputFields)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalFooter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+  }, InputTextFields, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_FormElements__WEBPACK_IMPORTED_MODULE_4__.InputCheckBox, {
+    onchange: change,
+    name: "isInUse",
+    value: device.isInUse,
+    key: "isInUse",
+    placeholder: "\u0412 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u043D\u0438\u0438",
+    readonly: readonly
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_FormElements__WEBPACK_IMPORTED_MODULE_4__.InputSelectField, {
+    onchange: change,
+    name: "type",
+    value: device.type,
+    key: "type",
+    readonly: readonly
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_Modal__WEBPACK_IMPORTED_MODULE_3__.ModalFooter, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
     type: "button",
     className: "btn btn-secondary",
     onClick: closeClick
@@ -2679,30 +2838,14 @@ var DeviceWindow = function DeviceWindow(_ref2) {
     className: "btn btn-primary",
     onClick: saveClick
   }, "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C")));
-};
+}; //TODO: перемещение
+//TODO: добавление и удаление
 
-var DeviceIcon = function DeviceIcon(_ref7) {
-  var id = _ref7.id,
-      posX = _ref7.posX,
-      posY = _ref7.posY,
-      color = _ref7.color,
-      click = _ref7.click;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
-    x: posX,
-    y: posY,
-    width: "19",
-    height: "19",
-    fill: color,
-    stroke: "black",
-    strokeWidth: "2",
-    onClick: click
-  });
-};
 
-var FloorsPlan = function FloorsPlan(_ref8) {
-  var SiteService = _ref8.SiteService,
-      FloorsImages = _ref8.FloorsImages,
-      CurrentUser = _ref8.CurrentUser;
+var FloorsPlan = function FloorsPlan(_ref6) {
+  var SiteService = _ref6.SiteService,
+      FloorsImages = _ref6.FloorsImages,
+      CurrentUser = _ref6.CurrentUser;
 
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
       _useState2 = _slicedToArray(_useState, 2),
@@ -2728,7 +2871,7 @@ var FloorsPlan = function FloorsPlan(_ref8) {
       setIsOpenModal = _useState8[1]; //модальное окно открыто ли
 
 
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}),
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(EmptyDevice),
       _useState10 = _slicedToArray(_useState9, 2),
       currentDevice = _useState10[0],
       setCurrentDevice = _useState10[1]; //выбранное устройство
@@ -2750,11 +2893,40 @@ var FloorsPlan = function FloorsPlan(_ref8) {
   });
 
   var DeviceOnClick = function DeviceOnClick(id) {
+    setCurrentDevice(EmptyDevice);
     setIsChanged(false);
     setIsOpenModal(!isOpenModal);
     SiteService.GetDevices(id).then(function (result) {
       setCurrentDevice(result[0]);
     });
+  };
+
+  var handleChange = function handleChange(event) {
+    var value = event.target.type === 'checkbox' ? +event.target.checked : event.target.value;
+    setIsChanged(true);
+
+    var newDevice = _objectSpread(_objectSpread({}, currentDevice), {}, _defineProperty({}, event.target.name, value));
+
+    var color;
+
+    if (event.target.name === "type") {
+      color = TypesToColors[event.target.value];
+      newDevice = _objectSpread(_objectSpread({}, newDevice), {}, {
+        color: color
+      });
+    }
+
+    setCurrentDevice(newDevice);
+  };
+
+  var handleSaveClick = function handleSaveClick() {
+    if (isChanged) {
+      SiteService.PutDevice(currentDevice).then(function (r) {
+        return setIsUpdated(false);
+      });
+    }
+
+    setIsOpenModal(!isOpenModal);
   };
 
   var floortab = FloorsImages.map(function (element, index) {
@@ -2772,7 +2944,7 @@ var FloorsPlan = function FloorsPlan(_ref8) {
   var Devices = devices.filter(function (e) {
     return e.isEnabled && e.levelId === activeImage + 1;
   }).map(function (e) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(DeviceIcon, {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_components_FormElements__WEBPACK_IMPORTED_MODULE_4__.DeviceIcon, {
       id: e.deviceId,
       posX: e.posX,
       posY: e.posY,
@@ -2783,22 +2955,6 @@ var FloorsPlan = function FloorsPlan(_ref8) {
       }
     });
   });
-
-  var handleChange = function handleChange(event) {
-    setIsChanged(true);
-    setCurrentDevice(_objectSpread(_objectSpread({}, currentDevice), {}, _defineProperty({}, event.target.name, event.target.value)));
-  };
-
-  var handleSaveClick = function handleSaveClick() {
-    if (isChanged) {
-      SiteService.PutDevice(currentDevice).then(function (r) {
-        return console.log(r);
-      });
-    }
-
-    setIsOpenModal(!isOpenModal);
-  };
-
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "unselectable"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", {
@@ -2830,9 +2986,9 @@ var FloorsPlan = function FloorsPlan(_ref8) {
   }));
 };
 
-var mapStateToPropsFloorsPlan = function mapStateToPropsFloorsPlan(_ref9) {
-  var FloorsImages = _ref9.FloorsImages,
-      CurrentUser = _ref9.CurrentUser;
+var mapStateToPropsFloorsPlan = function mapStateToPropsFloorsPlan(_ref7) {
+  var FloorsImages = _ref7.FloorsImages,
+      CurrentUser = _ref7.CurrentUser;
   return {
     FloorsImages: FloorsImages,
     CurrentUser: CurrentUser

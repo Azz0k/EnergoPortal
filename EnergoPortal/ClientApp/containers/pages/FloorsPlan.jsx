@@ -2,7 +2,34 @@
 import { connect } from "react-redux";
 import {WithSiteService} from "../components/hoc";
 import Modal, {ModalHeader, ModalFooter, ModalBody} from "../components/Modal";
+import {InputSelectField,InputCheckBox,InputTextField, DeviceIcon} from "../components/FormElements";
+const EmptyDevice = {color:"",
+    deviceId: 0,
+    deviceName: "",
+    firstName: "",
+    ipAddress: "",
+    isEnabled: 0,
+    isInUse: 0,
+    lastName: "",
+    levelId: 0,
+    location: "",
+    loginName: "",
+    macAddress: "",
+    mailAddress: "",
+    memo: "",
+    middleName: "",
+    pbxPortNumber: "",
+    phoneId: "",
+    phoneNumber: "",
+    phoneSocketNumber: "",
+    posX: 0,
+    posY: 0,
+    socketNumber: "",
+    switchName: "",
+    switchPort: "",
+    type: ""};
 
+const TypesToColors ={"Компьютер":"Red", "Принтер":"Green", "WiFi":"Blue", "Другое":"Yellow", "Камера":"Violet", "Регистратор":"Black"};
 const DeviceTextFieldsWithPlaceholders = {
         "socketNumber":"Номер розетки",
         "switchName":"Название свича",
@@ -24,29 +51,12 @@ const DeviceTextFieldsWithPlaceholders = {
 };
 const DeviceTextFields = Object.keys(DeviceTextFieldsWithPlaceholders);
 
-const InputField = ({ value, onchange, name, placeholder="", readonly = false}) =>{
-    return(
-        <div className="input-group mb-3 DeviceInput col-sm">
-            <input
-                type="text"
-                className="form-control "
-                placeholder={placeholder}
-                name={name}
-                value={value}
-                readOnly={readonly}
-                onChange={onchange}
-            />
-        </div>
-    );
-};
-
 const DeviceWindow = ({device, isOpen, closeClick,saveClick, change, readonly}) =>{
-
-    const InputFields = Object
+    const InputTextFields = Object
         .entries(device)
         .filter(([key,value])=>DeviceTextFields.includes(key))
         .map(([key,value])=>
-            <InputField
+            <InputTextField
                 onchange={change}
                 name={key}
                 value={value}
@@ -61,7 +71,22 @@ const DeviceWindow = ({device, isOpen, closeClick,saveClick, change, readonly}) 
             </ModalHeader>
             <ModalBody>
                 <div className="row">
-                    {InputFields}
+                    {InputTextFields}
+                    <InputCheckBox
+                        onchange={change}
+                        name="isInUse"
+                        value={device.isInUse}
+                        key="isInUse"
+                        placeholder="В использовании"
+                        readonly={readonly}
+                    />
+                    <InputSelectField
+                        onchange={change}
+                        name="type"
+                        value={device.type}
+                        key="type"
+                        readonly={readonly}
+                    />
                 </div>
             </ModalBody>
             <ModalFooter>
@@ -82,29 +107,16 @@ const DeviceWindow = ({device, isOpen, closeClick,saveClick, change, readonly}) 
             </ModalFooter>
         </Modal>
     );
-
 };
 
-const DeviceIcon = ({id, posX, posY, color, click  }) => {
-    return (
-            <rect
-                x={posX} y={posY}
-                width="19" height="19"
-                fill={color}
-                stroke="black"
-                strokeWidth="2"
-                onClick={click}
-            />
-    );
-};
-
-
+//TODO: перемещение
+//TODO: добавление и удаление
 const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
     const [activeImage, setActiveImage] = useState(0); //текущий этаж
     const [isUpdated, setIsUpdated] = useState(false); //для обновления всех координат устройств установить в false
     const [devices, setDevices] = useState([]);//координаты, цвета и т.д всех устройств
     const [isOpenModal, setIsOpenModal] = useState(false); //модальное окно открыто ли
-    const [currentDevice, setCurrentDevice] = useState({}); //выбранное устройство
+    const [currentDevice, setCurrentDevice] = useState(EmptyDevice); //выбранное устройство
     const [isChanged, setIsChanged] = useState(false); //были ли изменения, надо ли записывать.
     useEffect(() => {
         if (!isUpdated) {
@@ -115,12 +127,35 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
         }
     });
     const DeviceOnClick = (id) =>{
+        setCurrentDevice(EmptyDevice);
         setIsChanged(false);
         setIsOpenModal(!isOpenModal);
         SiteService.GetDevices(id).then(result => {
             setCurrentDevice(result[0]);
         });
 
+    };
+
+    const handleChange = (event) => {
+        const value = event.target.type === 'checkbox' ? +event.target.checked : event.target.value;
+        setIsChanged(true);
+        let newDevice={
+            ...currentDevice,
+            [event.target.name]:value,
+        };
+        let color;
+        if (event.target.name==="type") {
+            color = TypesToColors[event.target.value];
+            newDevice = {...newDevice, color}
+        }
+        setCurrentDevice(newDevice);
+    };
+
+    const  handleSaveClick =()=>{
+        if (isChanged){
+            SiteService.PutDevice(currentDevice).then(r=>setIsUpdated(false));
+        }
+        setIsOpenModal(!isOpenModal);
     };
 
     const floortab = FloorsImages.map((element, index) => {
@@ -130,7 +165,7 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
             <li className="nav-item" onClick={() => setActiveImage(index)} key={element.id}>
                 <span className={className} > {element.name}</span>
             </li>
-            );
+        );
     });
 
     const Devices = devices.filter(e=>(e.isEnabled && e.levelId===(activeImage+1))).map(e =>{
@@ -145,19 +180,6 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
             />);
     })
 
-    const handleChange = (event) => {
-        setIsChanged(true);
-        setCurrentDevice({
-            ...currentDevice,
-            [event.target.name]:event.target.value,
-        });
-    };
-    const  handleSaveClick =()=>{
-        if (isChanged){
-            SiteService.PutDevice(currentDevice).then(r => console.log(r));
-        }
-        setIsOpenModal(!isOpenModal);
-    };
 
     return (
         <div className="unselectable">
