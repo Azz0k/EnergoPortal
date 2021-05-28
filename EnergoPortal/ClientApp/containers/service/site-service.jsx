@@ -65,13 +65,45 @@ class SiteService {
             response = await this.backendAPI.app.put(url,data,{ headers: AuthHeader });
         }
         catch (e){
-            console.log("Can't get devices");
+            console.log("Can't update device id:"+device.deviceId);
         }
         if (response.status === 200) {
             return response;
         }
         throw new Error('Service unavailable');
     }
+    async AddDevice(device){
+        let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
+        let url = this.backendAPI.url+this.backendAPI.devices;
+        const data = JSON.stringify(device);
+        let response;
+        try {
+            response = await this.backendAPI.app.post(url,data,{ headers: AuthHeader });
+        }
+        catch (e){
+            console.log("Can't add devices");
+        }
+        if (response.status === 200) {
+            return response;
+        }
+        throw new Error('Service unavailable');
+    }
+    async DeleteDevice(id){
+        let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
+        let url = this.backendAPI.url+this.backendAPI.devices+ '/'+id;
+        let response;
+        try {
+            response = await this.backendAPI.app.delete(url,{ headers: AuthHeader });
+        }
+        catch (e){
+            console.log("Can't delete device id:"+id);
+        }
+        if (response.status === 200) {
+            return response;
+        }
+        throw new Error('Service unavailable');
+    }
+
 }
 
 

@@ -30,6 +30,18 @@ namespace EnergoPortal.Controllers
         {
             await _deviceRepository.UpdateDevice(device);
         }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "4")]
+        [HttpPost]
+        public async Task AddDevice([FromBody] Device device)
+        {
+            await _deviceRepository.AddDevice(device);
+        }
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "5")]
+        [HttpDelete]
+        public async Task DeleteDevice(int id)
+        {
+            await _deviceRepository.DeleteDevice(id);
+        }
 
     }
 }

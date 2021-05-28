@@ -2410,7 +2410,9 @@ var DeviceIcon = function DeviceIcon(_ref4) {
       posX = _ref4.posX,
       posY = _ref4.posY,
       color = _ref4.color,
-      click = _ref4.click;
+      click = _ref4.click,
+      mouseDown = _ref4.mouseDown,
+      mouseUp = _ref4.mouseUp;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("rect", {
     x: posX,
     y: posY,
@@ -2419,7 +2421,9 @@ var DeviceIcon = function DeviceIcon(_ref4) {
     fill: color,
     stroke: "black",
     strokeWidth: "2",
-    onClick: click
+    onClick: click,
+    onMouseDown: mouseDown,
+    onMouseUp: mouseUp
   });
 };
 
@@ -2729,6 +2733,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+var actionsMenu = ["Редактировать", "Переместить", "Добавить", "Удалить"];
 var EmptyDevice = {
   color: "",
   deviceId: 0,
@@ -2853,35 +2858,53 @@ var FloorsPlan = function FloorsPlan(_ref6) {
       setActiveImage = _useState2[1]; //текущий этаж
 
 
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0),
       _useState4 = _slicedToArray(_useState3, 2),
-      isUpdated = _useState4[0],
-      setIsUpdated = _useState4[1]; //для обновления всех координат устройств установить в false
+      activeAction = _useState4[0],
+      setActiveAction = _useState4[1];
 
-
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
-      devices = _useState6[0],
-      setDevices = _useState6[1]; //координаты, цвета и т.д всех устройств
+      isUpdated = _useState6[0],
+      setIsUpdated = _useState6[1]; //для обновления всех координат устройств установить в false
 
 
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
       _useState8 = _slicedToArray(_useState7, 2),
-      isOpenModal = _useState8[0],
-      setIsOpenModal = _useState8[1]; //модальное окно открыто ли
+      devices = _useState8[0],
+      setDevices = _useState8[1]; //координаты, цвета и т.д всех устройств
 
 
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(EmptyDevice),
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      currentDevice = _useState10[0],
-      setCurrentDevice = _useState10[1]; //выбранное устройство
+      isOpenModal = _useState10[0],
+      setIsOpenModal = _useState10[1]; //модальное окно открыто ли
 
 
-  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+  var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(EmptyDevice),
       _useState12 = _slicedToArray(_useState11, 2),
-      isChanged = _useState12[0],
-      setIsChanged = _useState12[1]; //были ли изменения, надо ли записывать.
+      currentDevice = _useState12[0],
+      setCurrentDevice = _useState12[1]; //выбранное устройство
 
+
+  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState14 = _slicedToArray(_useState13, 2),
+      isChanged = _useState14[0],
+      setIsChanged = _useState14[1]; //были ли изменения, надо ли записывать.
+
+
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState16 = _slicedToArray(_useState15, 2),
+      dragStarted = _useState16[0],
+      setDragStarted = _useState16[1];
+
+  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    x: 0,
+    y: 0
+  }),
+      _useState18 = _slicedToArray(_useState17, 2),
+      deltaPosition = _useState18[0],
+      setDeltaPosition = _useState18[1];
 
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     if (!isUpdated) {
@@ -2892,13 +2915,81 @@ var FloorsPlan = function FloorsPlan(_ref6) {
     }
   });
 
+  var handleMouseClick = function handleMouseClick(event) {
+    if (activeAction === 2 && CurrentUser.role > 3) {
+      var newDevice = _objectSpread(_objectSpread({}, EmptyDevice), {}, {
+        posX: event.clientX - 5,
+        posY: event.clientY - 115,
+        isEnabled: 1,
+        isInUse: 1,
+        levelId: activeImage + 1
+      });
+
+      setCurrentDevice(newDevice);
+      setIsChanged(false);
+      setIsOpenModal(!isOpenModal);
+    }
+  };
+
   var DeviceOnClick = function DeviceOnClick(id) {
-    setCurrentDevice(EmptyDevice);
+    if (activeAction === 0) {
+      setIsChanged(false);
+      setIsOpenModal(!isOpenModal);
+      SiteService.GetDevices(id).then(function (result) {
+        setCurrentDevice(result[0]);
+      });
+    }
+
+    if (activeAction === 3 && CurrentUser.role > 4) {
+      SiteService.DeleteDevice(id).then(function (r) {
+        return setIsUpdated(false);
+      });
+    }
+  };
+
+  var handleMouseDown = function handleMouseDown(event, device) {
     setIsChanged(false);
-    setIsOpenModal(!isOpenModal);
-    SiteService.GetDevices(id).then(function (result) {
-      setCurrentDevice(result[0]);
-    });
+
+    if (activeAction === 1 && CurrentUser.role > 2) {
+      SiteService.GetDevices(device.deviceId).then(function (result) {
+        setCurrentDevice(result[0]);
+        setDragStarted(true);
+      });
+      setDeltaPosition({
+        x: event.clientX - device.posX,
+        y: event.clientY - device.posY
+      });
+    }
+  };
+
+  var handleMouseUp = function handleMouseUp(event, device) {
+    if (activeAction === 1) {
+      setDragStarted(false);
+
+      if (isChanged) {
+        SiteService.PutDevice(currentDevice).then(function (r) {
+          return setIsUpdated(false);
+        });
+        setIsChanged(false);
+      }
+    }
+  };
+
+  var handleMouseMove = function handleMouseMove(event) {
+    if (activeAction === 1 && dragStarted) {
+      setIsChanged(true);
+
+      var newDevice = _objectSpread(_objectSpread({}, currentDevice), {}, {
+        posX: event.clientX - deltaPosition.x,
+        posY: event.clientY - deltaPosition.y
+      });
+
+      setCurrentDevice(newDevice);
+      var newDevices = devices.map(function (el) {
+        return el.deviceId === newDevice.deviceId ? newDevice : el;
+      });
+      setDevices(newDevices);
+    }
   };
 
   var handleChange = function handleChange(event) {
@@ -2920,16 +3011,25 @@ var FloorsPlan = function FloorsPlan(_ref6) {
   };
 
   var handleSaveClick = function handleSaveClick() {
+    setIsOpenModal(!isOpenModal);
+
     if (isChanged) {
-      SiteService.PutDevice(currentDevice).then(function (r) {
-        return setIsUpdated(false);
-      });
+      if (activeAction === 0) {
+        SiteService.PutDevice(currentDevice).then(function (r) {
+          return setIsUpdated(false);
+        });
+      } else {
+        console.log(currentDevice);
+        SiteService.AddDevice(currentDevice).then(function (r) {
+          return setIsUpdated(false);
+        });
+      }
     }
 
-    setIsOpenModal(!isOpenModal);
+    setIsChanged(false);
   };
 
-  var floortab = FloorsImages.map(function (element, index) {
+  var floorsTab = FloorsImages.map(function (element, index) {
     var className = index === activeImage ? "FloorTabItem nav-link active" : "FloorTabItem nav-link";
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
       className: "nav-item",
@@ -2940,6 +3040,19 @@ var FloorsPlan = function FloorsPlan(_ref6) {
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
       className: className
     }, " ", element.name));
+  });
+  var actionTabs = actionsMenu.map(function (element, index) {
+    var className = index === activeAction ? "FloorTabItem nav-link active" : "FloorTabItem nav-link";
+    className += index + 1 < CurrentUser.role ? "" : " disabled";
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
+      className: "nav-item",
+      onClick: function onClick() {
+        return index + 1 < CurrentUser.role ? setActiveAction(index) : console.log("Deny");
+      },
+      key: index
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", {
+      className: className
+    }, " ", element));
   });
   var Devices = devices.filter(function (e) {
     return e.isEnabled && e.levelId === activeImage + 1;
@@ -2952,6 +3065,12 @@ var FloorsPlan = function FloorsPlan(_ref6) {
       key: e.deviceId,
       click: function click() {
         return DeviceOnClick(e.deviceId);
+      },
+      mouseDown: function mouseDown(event) {
+        return handleMouseDown(event, e);
+      },
+      mouseUp: function mouseUp(event) {
+        return handleMouseUp(event, e);
       }
     });
   });
@@ -2959,13 +3078,17 @@ var FloorsPlan = function FloorsPlan(_ref6) {
     className: "unselectable"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", {
     className: "nav nav-tabs FloorTabs justify-content-center"
-  }, floortab), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+  }, floorsTab), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", {
+    className: "nav nav-pills FloorTabs justify-content-center"
+  }, actionTabs), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "imageContainer"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
     className: "DeviceSvg",
     xmlns: "http://www.w3.org/2000/svg",
-    width: "1600",
-    height: "800"
+    width: "1700",
+    height: "800",
+    onMouseMove: handleMouseMove,
+    onClick: handleMouseClick
   }, Devices), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("img", {
     src: FloorsImages[activeImage].href,
     className: "floorImg",
@@ -3215,7 +3338,7 @@ var SiteService = /*#__PURE__*/function () {
               case 9:
                 _context4.prev = 9;
                 _context4.t0 = _context4["catch"](3);
-                console.log("Can't get devices");
+                console.log("Can't update device id:" + device.deviceId);
 
               case 12:
                 if (!(response.status === 200)) {
@@ -3241,6 +3364,115 @@ var SiteService = /*#__PURE__*/function () {
       }
 
       return PutDevice;
+    }()
+  }, {
+    key: "AddDevice",
+    value: function () {
+      var _AddDevice = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(device) {
+        var AuthHeader, url, data, response;
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                AuthHeader = {
+                  'Authorization': 'Bearer ' + _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().CurrentUser.accessToken
+                };
+                url = this.backendAPI.url + this.backendAPI.devices;
+                data = JSON.stringify(device);
+                _context5.prev = 3;
+                _context5.next = 6;
+                return this.backendAPI.app.post(url, data, {
+                  headers: AuthHeader
+                });
+
+              case 6:
+                response = _context5.sent;
+                _context5.next = 12;
+                break;
+
+              case 9:
+                _context5.prev = 9;
+                _context5.t0 = _context5["catch"](3);
+                console.log("Can't add devices");
+
+              case 12:
+                if (!(response.status === 200)) {
+                  _context5.next = 14;
+                  break;
+                }
+
+                return _context5.abrupt("return", response);
+
+              case 14:
+                throw new Error('Service unavailable');
+
+              case 15:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this, [[3, 9]]);
+      }));
+
+      function AddDevice(_x2) {
+        return _AddDevice.apply(this, arguments);
+      }
+
+      return AddDevice;
+    }()
+  }, {
+    key: "DeleteDevice",
+    value: function () {
+      var _DeleteDevice = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(id) {
+        var AuthHeader, url, response;
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                AuthHeader = {
+                  'Authorization': 'Bearer ' + _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().CurrentUser.accessToken
+                };
+                url = this.backendAPI.url + this.backendAPI.devices + '/' + id;
+                _context6.prev = 2;
+                _context6.next = 5;
+                return this.backendAPI.app["delete"](url, {
+                  headers: AuthHeader
+                });
+
+              case 5:
+                response = _context6.sent;
+                _context6.next = 11;
+                break;
+
+              case 8:
+                _context6.prev = 8;
+                _context6.t0 = _context6["catch"](2);
+                console.log("Can't delete device id:" + id);
+
+              case 11:
+                if (!(response.status === 200)) {
+                  _context6.next = 13;
+                  break;
+                }
+
+                return _context6.abrupt("return", response);
+
+              case 13:
+                throw new Error('Service unavailable');
+
+              case 14:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this, [[2, 8]]);
+      }));
+
+      function DeleteDevice(_x3) {
+        return _DeleteDevice.apply(this, arguments);
+      }
+
+      return DeleteDevice;
     }()
   }]);
 

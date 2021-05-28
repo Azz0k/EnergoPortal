@@ -49,7 +49,7 @@ const InputSelectField = ({ value, onchange, name,  readonly = false}) =>{
     );
 };
 
-const DeviceIcon = ({id, posX, posY, color, click  }) => {
+const DeviceIcon = ({id, posX, posY, color, click, mouseDown, mouseUp  }) => {
     return (
         <rect
             x={posX} y={posY}
@@ -58,6 +58,8 @@ const DeviceIcon = ({id, posX, posY, color, click  }) => {
             stroke="black"
             strokeWidth="2"
             onClick={click}
+            onMouseDown={mouseDown}
+            onMouseUp={mouseUp}
         />
     );
 };
