@@ -1,8 +1,8 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
 import {WithSiteService} from "../components/hoc";
-import Modal, {ModalHeader, ModalFooter, ModalBody} from "../components/Modal";
-import {InputSelectField,InputCheckBox,InputTextField, DeviceIcon} from "../components/FormElements";
+import Modal, {ModalHeader, ModalFooter, ModalBody} from "../components/modal";
+import {InputSelectField,InputCheckBox,InputTextField, DeviceIcon, SpinnerBoundary} from "../components/form-elements";
 
 const actionsMenu = ["Редактировать", "Переместить", "Добавить", "Удалить"];
 const EmptyDevice = {color:"",
@@ -111,8 +111,7 @@ const DeviceWindow = ({device, isOpen, closeClick,saveClick, change, readonly}) 
     );
 };
 
-//TODO: перемещение
-//TODO: добавление и удаление
+
 const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
     const [activeImage, setActiveImage] = useState(0); //текущий этаж
     const [activeAction, setActiveAction] = useState(0);
@@ -121,8 +120,9 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
     const [isOpenModal, setIsOpenModal] = useState(false); //модальное окно открыто ли
     const [currentDevice, setCurrentDevice] = useState(EmptyDevice); //выбранное устройство
     const [isChanged, setIsChanged] = useState(false); //были ли изменения, надо ли записывать.
-    const [dragStarted, setDragStarted] = useState(false);
-    const [deltaPosition, setDeltaPosition] = useState({x:0, y:0});
+    const [dragStarted, setDragStarted] = useState(false); //был ли драг
+    const [deltaPosition, setDeltaPosition] = useState({x:0, y:0});//для координат при драге
+
     useEffect(() => {
         if (!isUpdated) {
             SiteService.GetDevices().then(result=>{
@@ -134,7 +134,13 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
 
     const handleMouseClick = (event) =>{
         if (activeAction===2 && CurrentUser.role>3){
-            const newDevice = {...EmptyDevice,posX:event.clientX-5,posY:event.clientY-115,isEnabled: 1, isInUse: 1, levelId: activeImage+1};
+            const newDevice = {...EmptyDevice,
+                posX:event.clientX-5,
+                posY:event.clientY-115,
+                isEnabled: 1,
+                isInUse: 1,
+                levelId: activeImage+1
+            };
             setCurrentDevice(newDevice);
             setIsChanged(false);
             setIsOpenModal(!isOpenModal);
@@ -179,7 +185,10 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
     const handleMouseMove = (event) =>{
         if (activeAction ===1 && dragStarted){
             setIsChanged(true);
-            const newDevice = {...currentDevice,posX: (event.clientX-deltaPosition.x),posY: (event.clientY-deltaPosition.y)};
+            const newDevice = {...currentDevice,
+                posX: (event.clientX-deltaPosition.x),
+                posY: (event.clientY-deltaPosition.y)
+            };
             setCurrentDevice(newDevice);
             const newDevices = devices.map(el=>el.deviceId===newDevice.deviceId?newDevice:el);
             setDevices(newDevices);
@@ -229,7 +238,7 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
         let className = index === activeAction ? "FloorTabItem nav-link active" : "FloorTabItem nav-link";
         className += (index+1) < CurrentUser.role? "":" disabled";
         return(
-            <li className="nav-item" onClick={() =>(index+1) < CurrentUser.role?setActiveAction(index):console.log("Deny") } key={index} >
+            <li className="nav-item" onClick={()=>(index+1)<CurrentUser.role?setActiveAction(index):null } key={index} >
                 <span className={className} > {element}</span>
             </li>
         );
@@ -265,7 +274,7 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
                     onMouseMove={handleMouseMove}
                     onClick={handleMouseClick}
                 >
-                    {Devices}
+                     {Devices}
                 </svg>
                 <img src={FloorsImages[activeImage].href} className="floorImg" alt="..." />
             </div>

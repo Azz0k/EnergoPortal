@@ -63,4 +63,6 @@ const DeviceIcon = ({id, posX, posY, color, click, mouseDown, mouseUp  }) => {
         />
     );
 };
+
+
 export {InputSelectField, InputCheckBox, InputTextField, DeviceIcon};
