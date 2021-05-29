@@ -6,7 +6,9 @@ const InputTextField = ({ value, onchange, name, placeholder="", readonly = fals
             <input
                 type="text"
                 className="form-control "
+                data-placement="top"
                 placeholder={placeholder}
+                title = {placeholder}
                 name={name}
                 value={value}
                 readOnly={readonly}

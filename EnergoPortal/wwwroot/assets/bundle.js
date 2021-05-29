@@ -2449,7 +2449,9 @@ var InputTextField = function InputTextField(_ref) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
     type: "text",
     className: "form-control ",
+    "data-placement": "top",
     placeholder: placeholder,
+    title: placeholder,
     name: name,
     value: value,
     readOnly: readonly,
@@ -2646,7 +2648,7 @@ var Modal = function Modal(_ref) {
     "aria-hidden": "true",
     style: style
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
-    className: "modal-dialog modal-lg",
+    className: "modal-dialog modal-lg modal-dialog-centered",
     role: "document"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
     className: "modal-content"

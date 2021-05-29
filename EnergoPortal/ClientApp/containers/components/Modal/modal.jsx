@@ -35,7 +35,7 @@ const Modal = ({isOpen, children}) => {
              role="dialog"
              aria-hidden="true"
              style={ style }>
-            <div className="modal-dialog modal-lg" role="document">
+            <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div className="modal-content">{children}</div>
             </div>
         </div>
