@@ -7,105 +7,76 @@ class SiteService {
         this.backendAPI = store.getState().backendAPI;
     }
 
-    async WaitForToken(){
+    async WaitForToken() {
         return new Promise(resolve => {
-            let timerId=setInterval(()=>{
-                if (store.getState().CurrentUser.tokenUpdated){
+            let timerId = setInterval(() => {
+                if (store.getState().CurrentUser.tokenUpdated) {
                     resolve();
                     clearInterval(timerId);
                 }
-            },50);
+            }, 50);
         });
     }
 
-
-    async GetDevices(id= 0) {
-        await this.WaitForToken();
-        let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
-        let url = this.backendAPI.url+this.backendAPI.devices;
-        if (id>0){
-            url = url + '/'+id;
-        }
+    async RequestToAPI(method, url, data = null ) {
+        let AuthHeader = {'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
+        let fullUrl = this.backendAPI.url + url;
         let response;
         try {
-            response = await this.backendAPI.app.get(url,{ headers: AuthHeader });
-        }
-        catch (e){
-            console.log("Can't get devices");
+            if (data != null) {
+                response = await this.backendAPI.app[method](fullUrl, data, {headers: AuthHeader});
+            } else {
+                response = await this.backendAPI.app[method](fullUrl, {headers: AuthHeader});
+            }
+        } catch (e) {
+            console.log("Can't " + method + " :" + data);
         }
         if (response.status === 200) {
-            const  result  = response.data.records;
-            return result;
+            return response;
         }
         throw new Error('Service unavailable');
-    };
+    }
 
-    async GetJWT(){
-        let url = this.backendAPI.url+this.backendAPI.user;
+    async GetDevices(id = 0) {
+        await this.WaitForToken();
+        let url = id > 0 ? this.backendAPI.devices + '/' + id : this.backendAPI.devices;
+        const result = await this.RequestToAPI("get", url);
+        return result.data.records;
+    }
+    async PutDevice(device){
+        let url = this.backendAPI.devices;
+        const data = JSON.stringify(device);
+        const result = await this.RequestToAPI("put", url, data);
+        return result;
+    }
+
+    async AddDevice(device) {
+        let url = this.backendAPI.devices;
+        const data = JSON.stringify(device);
+        const result = await this.RequestToAPI("post", url, data);
+        return result;
+    }
+
+    async DeleteDevice(id){
+        let url = this.backendAPI.devices+ '/'+id;
+        const result = await this.RequestToAPI("delete", url);
+        return result;
+    }
+
+    async GetJWT() {
+        let url = this.backendAPI.url + this.backendAPI.user;
         let response;
         try {
             response = await this.backendAPI.app.get(url);
-        }
-        catch (e){
+        } catch (e) {
             console.log("Can't get users");
         }
         if (response.status === 200) {
-            const  result  = response.data;
+            const result = response.data;
             return result;
         }
         throw new Error('Service unavailable');
-    };
-
-    async PutDevice(device){
-        let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
-        let url = this.backendAPI.url+this.backendAPI.devices;
-        const data = JSON.stringify(device);
-        let response;
-        try {
-            response = await this.backendAPI.app.put(url,data,{ headers: AuthHeader });
-        }
-        catch (e){
-            console.log("Can't update device id:"+device.deviceId);
-        }
-        if (response.status === 200) {
-            return response;
-        }
-        throw new Error('Service unavailable');
     }
-    async AddDevice(device){
-        let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
-        let url = this.backendAPI.url+this.backendAPI.devices;
-        const data = JSON.stringify(device);
-        let response;
-        try {
-            response = await this.backendAPI.app.post(url,data,{ headers: AuthHeader });
-        }
-        catch (e){
-            console.log("Can't add devices");
-        }
-        if (response.status === 200) {
-            return response;
-        }
-        throw new Error('Service unavailable');
-    }
-    async DeleteDevice(id){
-        let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
-        let url = this.backendAPI.url+this.backendAPI.devices+ '/'+id;
-        let response;
-        try {
-            response = await this.backendAPI.app.delete(url,{ headers: AuthHeader });
-        }
-        catch (e){
-            console.log("Can't delete device id:"+id);
-        }
-        if (response.status === 200) {
-            return response;
-        }
-        throw new Error('Service unavailable');
-    }
-
 }
-
-
 
 export default SiteService;

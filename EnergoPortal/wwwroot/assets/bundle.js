@@ -3026,11 +3026,13 @@ var FloorsPlan = function FloorsPlan(_ref6) {
         posY: event.clientY - 115,
         isEnabled: 1,
         isInUse: 1,
+        color: "Red",
+        type: "Компьютер",
         levelId: activeImage + 1
       });
 
       setCurrentDevice(newDevice);
-      setIsChanged(false);
+      setIsChanged(true);
       setIsOpenModal(!isOpenModal);
     }
   };
@@ -3295,67 +3297,114 @@ var SiteService = /*#__PURE__*/function () {
       return WaitForToken;
     }()
   }, {
-    key: "GetDevices",
+    key: "RequestToAPI",
     value: function () {
-      var _GetDevices = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-        var id,
+      var _RequestToAPI = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(method, url) {
+        var data,
             AuthHeader,
-            url,
+            fullUrl,
             response,
-            result,
             _args2 = arguments;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                id = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : 0;
-                _context2.next = 3;
-                return this.WaitForToken();
-
-              case 3:
+                data = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : null;
                 AuthHeader = {
                   'Authorization': 'Bearer ' + _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().CurrentUser.accessToken
                 };
-                url = this.backendAPI.url + this.backendAPI.devices;
+                fullUrl = this.backendAPI.url + url;
+                _context2.prev = 3;
 
-                if (id > 0) {
-                  url = url + '/' + id;
-                }
-
-                _context2.prev = 6;
-                _context2.next = 9;
-                return this.backendAPI.app.get(url, {
-                  headers: AuthHeader
-                });
-
-              case 9:
-                response = _context2.sent;
-                _context2.next = 15;
-                break;
-
-              case 12:
-                _context2.prev = 12;
-                _context2.t0 = _context2["catch"](6);
-                console.log("Can't get devices");
-
-              case 15:
-                if (!(response.status === 200)) {
-                  _context2.next = 18;
+                if (!(data != null)) {
+                  _context2.next = 10;
                   break;
                 }
 
-                result = response.data.records;
-                return _context2.abrupt("return", result);
+                _context2.next = 7;
+                return this.backendAPI.app[method](fullUrl, data, {
+                  headers: AuthHeader
+                });
+
+              case 7:
+                response = _context2.sent;
+                _context2.next = 13;
+                break;
+
+              case 10:
+                _context2.next = 12;
+                return this.backendAPI.app[method](fullUrl, {
+                  headers: AuthHeader
+                });
+
+              case 12:
+                response = _context2.sent;
+
+              case 13:
+                _context2.next = 18;
+                break;
+
+              case 15:
+                _context2.prev = 15;
+                _context2.t0 = _context2["catch"](3);
+                console.log("Can't " + method + " :" + data);
 
               case 18:
+                if (!(response.status === 200)) {
+                  _context2.next = 20;
+                  break;
+                }
+
+                return _context2.abrupt("return", response);
+
+              case 20:
                 throw new Error('Service unavailable');
 
-              case 19:
+              case 21:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[6, 12]]);
+        }, _callee2, this, [[3, 15]]);
+      }));
+
+      function RequestToAPI(_x, _x2) {
+        return _RequestToAPI.apply(this, arguments);
+      }
+
+      return RequestToAPI;
+    }()
+  }, {
+    key: "GetDevices",
+    value: function () {
+      var _GetDevices = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+        var id,
+            url,
+            result,
+            _args3 = arguments;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                id = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : 0;
+                _context3.next = 3;
+                return this.WaitForToken();
+
+              case 3:
+                url = id > 0 ? this.backendAPI.devices + '/' + id : this.backendAPI.devices;
+                _context3.next = 6;
+                return this.RequestToAPI("get", url);
+
+              case 6:
+                result = _context3.sent;
+                return _context3.abrupt("return", result.data.records);
+
+              case 8:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
       }));
 
       function GetDevices() {
@@ -3365,105 +3414,32 @@ var SiteService = /*#__PURE__*/function () {
       return GetDevices;
     }()
   }, {
-    key: "GetJWT",
-    value: function () {
-      var _GetJWT = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
-        var url, response, result;
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                url = this.backendAPI.url + this.backendAPI.user;
-                _context3.prev = 1;
-                _context3.next = 4;
-                return this.backendAPI.app.get(url);
-
-              case 4:
-                response = _context3.sent;
-                _context3.next = 10;
-                break;
-
-              case 7:
-                _context3.prev = 7;
-                _context3.t0 = _context3["catch"](1);
-                console.log("Can't get users");
-
-              case 10:
-                if (!(response.status === 200)) {
-                  _context3.next = 13;
-                  break;
-                }
-
-                result = response.data;
-                return _context3.abrupt("return", result);
-
-              case 13:
-                throw new Error('Service unavailable');
-
-              case 14:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3, this, [[1, 7]]);
-      }));
-
-      function GetJWT() {
-        return _GetJWT.apply(this, arguments);
-      }
-
-      return GetJWT;
-    }()
-  }, {
     key: "PutDevice",
     value: function () {
       var _PutDevice = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(device) {
-        var AuthHeader, url, data, response;
+        var url, data, result;
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                AuthHeader = {
-                  'Authorization': 'Bearer ' + _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().CurrentUser.accessToken
-                };
-                url = this.backendAPI.url + this.backendAPI.devices;
+                url = this.backendAPI.devices;
                 data = JSON.stringify(device);
-                _context4.prev = 3;
-                _context4.next = 6;
-                return this.backendAPI.app.put(url, data, {
-                  headers: AuthHeader
-                });
+                _context4.next = 4;
+                return this.RequestToAPI("put", url, data);
+
+              case 4:
+                result = _context4.sent;
+                return _context4.abrupt("return", result);
 
               case 6:
-                response = _context4.sent;
-                _context4.next = 12;
-                break;
-
-              case 9:
-                _context4.prev = 9;
-                _context4.t0 = _context4["catch"](3);
-                console.log("Can't update device id:" + device.deviceId);
-
-              case 12:
-                if (!(response.status === 200)) {
-                  _context4.next = 14;
-                  break;
-                }
-
-                return _context4.abrupt("return", response);
-
-              case 14:
-                throw new Error('Service unavailable');
-
-              case 15:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, this, [[3, 9]]);
+        }, _callee4, this);
       }));
 
-      function PutDevice(_x) {
+      function PutDevice(_x3) {
         return _PutDevice.apply(this, arguments);
       }
 
@@ -3473,52 +3449,29 @@ var SiteService = /*#__PURE__*/function () {
     key: "AddDevice",
     value: function () {
       var _AddDevice = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(device) {
-        var AuthHeader, url, data, response;
+        var url, data, result;
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                AuthHeader = {
-                  'Authorization': 'Bearer ' + _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().CurrentUser.accessToken
-                };
-                url = this.backendAPI.url + this.backendAPI.devices;
+                url = this.backendAPI.devices;
                 data = JSON.stringify(device);
-                _context5.prev = 3;
-                _context5.next = 6;
-                return this.backendAPI.app.post(url, data, {
-                  headers: AuthHeader
-                });
+                _context5.next = 4;
+                return this.RequestToAPI("post", url, data);
+
+              case 4:
+                result = _context5.sent;
+                return _context5.abrupt("return", result);
 
               case 6:
-                response = _context5.sent;
-                _context5.next = 12;
-                break;
-
-              case 9:
-                _context5.prev = 9;
-                _context5.t0 = _context5["catch"](3);
-                console.log("Can't add devices");
-
-              case 12:
-                if (!(response.status === 200)) {
-                  _context5.next = 14;
-                  break;
-                }
-
-                return _context5.abrupt("return", response);
-
-              case 14:
-                throw new Error('Service unavailable');
-
-              case 15:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, this, [[3, 9]]);
+        }, _callee5, this);
       }));
 
-      function AddDevice(_x2) {
+      function AddDevice(_x4) {
         return _AddDevice.apply(this, arguments);
       }
 
@@ -3528,56 +3481,170 @@ var SiteService = /*#__PURE__*/function () {
     key: "DeleteDevice",
     value: function () {
       var _DeleteDevice = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(id) {
-        var AuthHeader, url, response;
+        var url, result;
         return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                AuthHeader = {
-                  'Authorization': 'Bearer ' + _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().CurrentUser.accessToken
-                };
-                url = this.backendAPI.url + this.backendAPI.devices + '/' + id;
-                _context6.prev = 2;
-                _context6.next = 5;
-                return this.backendAPI.app["delete"](url, {
-                  headers: AuthHeader
-                });
+                url = this.backendAPI.devices + '/' + id;
+                _context6.next = 3;
+                return this.RequestToAPI("delete", url);
+
+              case 3:
+                result = _context6.sent;
+                return _context6.abrupt("return", result);
 
               case 5:
-                response = _context6.sent;
-                _context6.next = 11;
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this);
+      }));
+
+      function DeleteDevice(_x5) {
+        return _DeleteDevice.apply(this, arguments);
+      }
+
+      return DeleteDevice;
+    }()
+  }, {
+    key: "GetJWT",
+    value: function () {
+      var _GetJWT = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+        var url, response, result;
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                url = this.backendAPI.url + this.backendAPI.user;
+                _context7.prev = 1;
+                _context7.next = 4;
+                return this.backendAPI.app.get(url);
+
+              case 4:
+                response = _context7.sent;
+                _context7.next = 10;
                 break;
 
-              case 8:
-                _context6.prev = 8;
-                _context6.t0 = _context6["catch"](2);
-                console.log("Can't delete device id:" + id);
+              case 7:
+                _context7.prev = 7;
+                _context7.t0 = _context7["catch"](1);
+                console.log("Can't get users");
 
-              case 11:
+              case 10:
                 if (!(response.status === 200)) {
-                  _context6.next = 13;
+                  _context7.next = 13;
                   break;
                 }
 
-                return _context6.abrupt("return", response);
+                result = response.data;
+                return _context7.abrupt("return", result);
 
               case 13:
                 throw new Error('Service unavailable');
 
               case 14:
               case "end":
-                return _context6.stop();
+                return _context7.stop();
             }
           }
-        }, _callee6, this, [[2, 8]]);
+        }, _callee7, this, [[1, 7]]);
       }));
 
-      function DeleteDevice(_x3) {
-        return _DeleteDevice.apply(this, arguments);
+      function GetJWT() {
+        return _GetJWT.apply(this, arguments);
       }
 
-      return DeleteDevice;
+      return GetJWT;
     }()
+    /*
+        async GetDevices(id= 0) {
+            await this.WaitForToken();
+            let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
+            let url = this.backendAPI.url+this.backendAPI.devices;
+            if (id>0){
+                url = url + '/'+id;
+            }
+            let response;
+            try {
+                response = await this.backendAPI.app.get(url,{ headers: AuthHeader });
+            }
+            catch (e){
+                console.log("Can't get devices");
+            }
+            if (response.status === 200) {
+                const  result  = response.data.records;
+                return result;
+            }
+            throw new Error('Service unavailable');
+        };
+    
+        async PutDevice(device){
+            let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
+            let url = this.backendAPI.url+this.backendAPI.devices;
+            const data = JSON.stringify(device);
+            let response;
+            try {
+                response = await this.backendAPI.app.put(url,data,{ headers: AuthHeader });
+            }
+            catch (e){
+                console.log("Can't update device id:"+device.deviceId);
+            }
+            if (response.status === 200) {
+                return response;
+            }
+            throw new Error('Service unavailable');
+        }
+         async AddDevice(device){
+            let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
+            let url = this.backendAPI.url+this.backendAPI.devices;
+            const data = JSON.stringify(device);
+            let response;
+            try {
+                response = await this.backendAPI.app.post(url,data,{ headers: AuthHeader });
+            }
+            catch (e){
+                console.log("Can't add devices");
+            }
+            if (response.status === 200) {
+                return response;
+            }
+            throw new Error('Service unavailable');
+        }
+          async DeleteDevice(id){
+            let AuthHeader = { 'Authorization': 'Bearer ' + store.getState().CurrentUser.accessToken};
+            let url = this.backendAPI.url+this.backendAPI.devices+ '/'+id;
+            let response;
+            try {
+                response = await this.backendAPI.app.delete(url,{ headers: AuthHeader });
+            }
+            catch (e){
+                console.log("Can't delete device id:"+id);
+            }
+            if (response.status === 200) {
+                return response;
+            }
+            throw new Error('Service unavailable');
+        }
+      }
+      async GetJWT(){
+            let url = this.backendAPI.url+this.backendAPI.user;
+            let response;
+            try {
+                response = await this.backendAPI.app.get(url);
+            }
+            catch (e){
+                console.log("Can't get users");
+            }
+            if (response.status === 200) {
+                const  result  = response.data;
+                return result;
+            }
+            throw new Error('Service unavailable');
+        };
+      */
+
   }]);
 
   return SiteService;

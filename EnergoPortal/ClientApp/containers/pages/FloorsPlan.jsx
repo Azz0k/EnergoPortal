@@ -2,7 +2,7 @@
 import { connect } from "react-redux";
 import {WithSiteService} from "../components/hoc";
 import Modal, {ModalHeader, ModalFooter, ModalBody} from "../components/modal";
-import {InputSelectField,InputCheckBox,InputTextField, DeviceIcon, SpinnerBoundary} from "../components/form-elements";
+import {InputSelectField,InputCheckBox,InputTextField, DeviceIcon} from "../components/form-elements";
 
 const actionsMenu = ["Редактировать", "Переместить", "Добавить", "Удалить"];
 const EmptyDevice = {color:"",
@@ -139,10 +139,12 @@ const FloorsPlan = ({ SiteService, FloorsImages, CurrentUser }) => {
                 posY:event.clientY-115,
                 isEnabled: 1,
                 isInUse: 1,
+                color: "Red",
+                type: "Компьютер",
                 levelId: activeImage+1
             };
             setCurrentDevice(newDevice);
-            setIsChanged(false);
+            setIsChanged(true);
             setIsOpenModal(!isOpenModal);
         }
     };
