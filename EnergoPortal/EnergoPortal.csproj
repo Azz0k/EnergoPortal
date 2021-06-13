@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DBRepository\DBRepository.csproj" />
