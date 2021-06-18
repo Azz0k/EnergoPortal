@@ -181,6 +181,16 @@ const initialState = {
             },
         }),
     },
+    backend1cAPI: {
+        url:"http://localhost:8010/proxy/energo-itilium/ws/IT_Mobile.1cws",
+        app: axios__WEBPACK_IMPORTED_MODULE_2___default().create({
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'Content-Type: application/soap+xml;charset=UTF-8;',
+                'Authorization': 'Basic ZQBuAGUAcgBnAG8AXABtAGkAbABvAGsAdQBtAC4AcABhAHYAZQBsADoAQwBrAGIAZABqADMANQAwAF8AXwA='
+            },
+        }),
+    },
     CurrentUser:{
         accessToken:"",
         userName:"",
@@ -222,6 +232,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 const horisontalMenu = [
+    { id: "4", name: "Тест", href: "/test", subId: [],},
     { id: "1", name: "Схема", href: "/", subId: [],},
     { id: "2", name: "Справочник", href: "#", subId: [],},
     { id: "3", name: "Инструменты", href: "#", subId: [],},
@@ -2316,8 +2327,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _error_boundary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../error-boundary */ "./ClientApp/containers/components/error-boundary/index.js");
 /* harmony import */ var _nav_bar_nav_bar_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../nav-bar/nav-bar.jsx */ "./ClientApp/containers/components/nav-bar/nav-bar.jsx");
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _pages_FloorsPlan_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../pages/FloorsPlan.jsx */ "./ClientApp/containers/pages/FloorsPlan.jsx");
+/* harmony import */ var _pages_Itilium_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../pages/Itilium.jsx */ "./ClientApp/containers/pages/Itilium.jsx");
+
 
 
 
@@ -2325,9 +2338,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var App = function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_error_boundary__WEBPACK_IMPORTED_MODULE_1__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_nav_bar_nav_bar_jsx__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__.Route, {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_error_boundary__WEBPACK_IMPORTED_MODULE_1__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_nav_bar_nav_bar_jsx__WEBPACK_IMPORTED_MODULE_2__.default, null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Switch, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
     path: "/",
     component: _pages_FloorsPlan_jsx__WEBPACK_IMPORTED_MODULE_3__.default,
+    exact: true
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__.Route, {
+    path: "/test",
+    component: _pages_Itilium_jsx__WEBPACK_IMPORTED_MODULE_4__.default,
     exact: true
   }))));
 };
@@ -3228,6 +3245,63 @@ var mapStateToPropsFloorsPlan = function mapStateToPropsFloorsPlan(_ref7) {
 
 /***/ }),
 
+/***/ "./ClientApp/containers/pages/Itilium.jsx":
+/*!************************************************!*\
+  !*** ./ClientApp/containers/pages/Itilium.jsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+/* harmony import */ var _components_hoc__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/hoc */ "./ClientApp/containers/components/hoc/index.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+var Itilium = function Itilium(_ref) {
+  var SiteService = _ref.SiteService;
+
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+      _useState2 = _slicedToArray(_useState, 2),
+      response = _useState2[0],
+      setResponse = _useState2[1];
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    SiteService.TestSoap().then(function (result) {
+      setResponse(result);
+    });
+  });
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, "\u0422\u0435\u0441\u0442");
+};
+
+var mapStateToProps = function mapStateToProps(_ref2) {
+  var CurrentUser = _ref2.CurrentUser;
+  return {
+    CurrentUser: CurrentUser
+  };
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_components_hoc__WEBPACK_IMPORTED_MODULE_2__.WithSiteService)((0,react_redux__WEBPACK_IMPORTED_MODULE_1__.connect)(mapStateToProps)(Itilium)));
+
+/***/ }),
+
 /***/ "./ClientApp/containers/service/site-service.jsx":
 /*!*******************************************************!*\
   !*** ./ClientApp/containers/service/site-service.jsx ***!
@@ -3263,6 +3337,7 @@ var SiteService = /*#__PURE__*/function () {
     _classCallCheck(this, SiteService);
 
     this.backendAPI = _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().backendAPI;
+    this.backend1cAPI = _store__WEBPACK_IMPORTED_MODULE_0__.default.getState().backend1cAPI;
   }
 
   _createClass(SiteService, [{
@@ -3557,6 +3632,56 @@ var SiteService = /*#__PURE__*/function () {
       }
 
       return GetJWT;
+    }()
+  }, {
+    key: "TestSoap",
+    value: function () {
+      var _TestSoap = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
+        var data, response, result;
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                data = '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:mob="http://www.mobile.itilium.org">\n' + '   <soap:Header/>\n' + '   <soap:Body>\n' + '      <mob:GetDataOfUser/>\n' + '   </soap:Body>\n' + '</soap:Envelope>';
+                _context8.prev = 1;
+                _context8.next = 4;
+                return this.backend1cAPI.app.post(this.backend1cAPI.url, data);
+
+              case 4:
+                response = _context8.sent;
+                _context8.next = 10;
+                break;
+
+              case 7:
+                _context8.prev = 7;
+                _context8.t0 = _context8["catch"](1);
+                console.log("Can't get users");
+
+              case 10:
+                if (!(response.status === 200)) {
+                  _context8.next = 13;
+                  break;
+                }
+
+                result = response.data;
+                return _context8.abrupt("return", result);
+
+              case 13:
+                throw new Error('Service unavailable');
+
+              case 14:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8, this, [[1, 7]]);
+      }));
+
+      function TestSoap() {
+        return _TestSoap.apply(this, arguments);
+      }
+
+      return TestSoap;
     }()
   }]);
 

@@ -19,6 +19,16 @@ const initialState = {
             },
         }),
     },
+    backend1cAPI: {
+        url:"http://1csrv5.energo.local/energo-itilium/ws/IT_Mobile.1cws",
+        app: axios.create({
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'Content-Type: application/soap+xml;charset=UTF-8;',
+                'Authorization': 'Basic ZQBuAGUAcgBnAG8AXABtAGkAbABvAGsAdQBtAC4AcABhAHYAZQBsADoAQwBrAGIAZABqADMANQAwAF8AXwA='
+            },
+        }),
+    },
     CurrentUser:{
         accessToken:"",
         userName:"",

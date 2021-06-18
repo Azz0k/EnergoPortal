@@ -5,6 +5,7 @@ import "regenerator-runtime/runtime";
 class SiteService {
     constructor() {
         this.backendAPI = store.getState().backendAPI;
+        this.backend1cAPI = store.getState().backend1cAPI;
     }
 
     async WaitForToken() {
@@ -68,6 +69,27 @@ class SiteService {
         let response;
         try {
             response = await this.backendAPI.app.get(url);
+        } catch (e) {
+            console.log("Can't get users");
+        }
+        if (response.status === 200) {
+            const result = response.data;
+            return result;
+        }
+        throw new Error('Service unavailable');
+    }
+
+    async TestSoap(){
+        const data = '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:mob="http://www.mobile.itilium.org">\n' +
+            '   <soap:Header/>\n' +
+            '   <soap:Body>\n' +
+            '      <mob:GetDataOfUser/>\n' +
+            '   </soap:Body>\n' +
+            '</soap:Envelope>';
+
+        let response;
+        try {
+            response = await this.backend1cAPI.app.post(this.backend1cAPI.url,data);
         } catch (e) {
             console.log("Can't get users");
         }

@@ -1,4 +1,5 @@
 const horisontalMenu = [
+    { id: "4", name: "Тест", href: "/test", subId: [],},
     { id: "1", name: "Схема", href: "/", subId: [],},
     { id: "2", name: "Справочник", href: "#", subId: [],},
     { id: "3", name: "Инструменты", href: "#", subId: [],},
